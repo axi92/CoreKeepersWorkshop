@@ -7,9 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreKeeperInventoryEditor",
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0006D291-398B-44CD-B99F-4973D3741D6E}.Debug|x64.ActiveCfg = Debug|x64
+		{0006D291-398B-44CD-B99F-4973D3741D6E}.Debug|x64.Build.0 = Debug|x64
 		{0006D291-398B-44CD-B99F-4973D3741D6E}.Release|x64.ActiveCfg = Release|x64
 		{0006D291-398B-44CD-B99F-4973D3741D6E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection

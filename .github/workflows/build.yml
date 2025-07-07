@@ -69,7 +69,7 @@ jobs:
     ## DEBUG BUILD
     ####################
     - name: Build CKW (Debug)
-      run: msbuild .\src\CoreKeeperInventoryEditor.sln /p:Configuration=Debug
+      run: msbuild .\src\CoreKeeperInventoryEditor.sln /p:Configuration=Debug /p:Platform=x64
     - name: Prepare Debug Output
       run: |
         $debugFolder = ".\release\CoreKeeperInventoryEditor-Debug-${{ steps.get_version.outputs.version }}"
