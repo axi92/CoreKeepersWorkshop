@@ -9,11 +9,9 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
     - name: Get version from AssemblyInfo.cs
       id: get_version
       run: |
@@ -27,30 +25,41 @@ jobs:
           Write-Error "Could not find version in AssemblyInfo.cs"
           exit 1
         }
-
     - name: Set up MSBuild
       uses: microsoft/setup-msbuild@v2
-
-    - name: Build Solution
+    ####################
+    ## RELEASE BUILD
+    ####################
+    - name: Build CKW (Release)
       run: msbuild .\src\CoreKeeperInventoryEditor.sln /p:Configuration=Release /p:Platform=x64
-
-    - name: Create release folder
+    - name: Prepare Release Output
       run: |
-        if (Test-Path ".\release") { Remove-Item ".\release" -Recurse -Force }
-        New-Item -ItemType Directory -Path ".\release\CoreKeeperInventoryEditor-${{ steps.get_version.outputs.version }}"
-
-    - name: Copy build output
-      run: Copy-Item -Path ".\src\CoreKeeperInventoryEditor\bin\x64\Release\*" -Destination ".\release\CoreKeeperInventoryEditor-${{ steps.get_version.outputs.version }}" -Recurse -Force
-
-    - name: Clean unnecessary files
-      run: |
-        Get-ChildItem -Path ".\release" -Recurse -Include *.xml, *.pdb, *.config | Remove-Item -Force
-
-    - name: Zip the release
-      run: Compress-Archive -Path ".\release\*" -DestinationPath ".\CoreKeeperInventoryEditor-${{ steps.get_version.outputs.version }}.zip"
-
-    - name: Upload artifact
+        $releaseFolder = ".\release\CoreKeeperInventoryEditor-Release-${{ steps.get_version.outputs.version }}"
+        if (Test-Path $releaseFolder) { Remove-Item $releaseFolder -Recurse -Force }
+        New-Item -ItemType Directory -Path $releaseFolder
+        Copy-Item -Path ".\src\CoreKeeperInventoryEditor\bin\x64\Release\*" -Destination $releaseFolder -Recurse -Force
+        Get-ChildItem -Path $releaseFolder -Recurse -Include *.xml, *.pdb, *.config | Remove-Item -Force
+        Compress-Archive -Path "$releaseFolder\*" -DestinationPath ".\CoreKeeperInventoryEditor-Release-${{ steps.get_version.outputs.version }}.zip"
+    - name: Upload Release Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: CoreKeeperInventoryEditor-${{ steps.get_version.outputs.version }}
-        path: .\CoreKeeperInventoryEditor-${{ steps.get_version.outputs.version }}.zip
+        name: CoreKeeperInventoryEditor-Release-${{ steps.get_version.outputs.version }}
+        path: .\CoreKeeperInventoryEditor-Release-${{ steps.get_version.outputs.version }}.zip
+    ####################
+    ## DEBUG BUILD
+    ####################
+    - name: Build CKW (Debug)
+      run: msbuild .\src\CoreKeeperInventoryEditor.sln /p:Configuration=Debug /p:Platform=x64
+    - name: Prepare Debug Output
+      run: |
+        $debugFolder = ".\release\CoreKeeperInventoryEditor-Debug-${{ steps.get_version.outputs.version }}"
+        if (Test-Path $debugFolder) { Remove-Item $debugFolder -Recurse -Force }
+        New-Item -ItemType Directory -Path $debugFolder
+        Copy-Item -Path ".\src\CoreKeeperInventoryEditor\bin\x64\Debug\*" -Destination $debugFolder -Recurse -Force
+        Get-ChildItem -Path $debugFolder -Recurse -Include *.xml, *.config | Remove-Item -Force
+        Compress-Archive -Path "$debugFolder\*" -DestinationPath ".\CoreKeeperInventoryEditor-Debug-${{ steps.get_version.outputs.version }}.zip"
+    - name: Upload Debug Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: CoreKeeperInventoryEditor-Debug-${{ steps.get_version.outputs.version }}
+        path: .\CoreKeeperInventoryEditor-Debug-${{ steps.get_version.outputs.version }}.zip
