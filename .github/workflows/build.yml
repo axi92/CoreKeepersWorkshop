@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  buildRelease:
     runs-on: windows-latest
     steps:
     - name: Checkout repository
@@ -45,11 +45,31 @@ jobs:
       with:
         name: CoreKeeperInventoryEditor-Release-${{ steps.get_version.outputs.version }}
         path: .\CoreKeeperInventoryEditor-Release-${{ steps.get_version.outputs.version }}.zip
+  buildDebug:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Get version from AssemblyInfo.cs
+      id: get_version
+      run: |
+        $content = Get-Content "src/CoreKeeperInventoryEditor/Properties/AssemblyInfo.cs"
+        $versionLine = $content | Where-Object { $_ -match '\[assembly: AssemblyFileVersion\("(.+?)"\)\]' }
+        if ($versionLine -match '\("(.+?)"\)') {
+          $version = $matches[1]
+          echo "Version extracted: $version"
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+        } else {
+          Write-Error "Could not find version in AssemblyInfo.cs"
+          exit 1
+        }
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v2
     ####################
     ## DEBUG BUILD
     ####################
     - name: Build CKW (Debug)
-      run: msbuild .\src\CoreKeeperInventoryEditor.sln /p:Configuration=Debug /p:Platform=x64
+      run: msbuild .\src\CoreKeeperInventoryEditor.sln /p:Configuration=Debug
     - name: Prepare Debug Output
       run: |
         $debugFolder = ".\release\CoreKeeperInventoryEditor-Debug-${{ steps.get_version.outputs.version }}"
