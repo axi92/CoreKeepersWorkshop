@@ -75,8 +75,9 @@ namespace CoreKeeperInventoryEditor
         public int worldSkinCounter = Settings.Default.WorldBackgroundCount;
         public int chatSkinCounter = Settings.Default.ChatBackgroundCount;
 
-        // Define error title.
-        public static readonly string errorTitle = "ERROR: " + FileVersionInfo.GetVersionInfo(Path.GetFileName(System.Windows.Forms.Application.ExecutablePath)).ProductName + " v" + FileVersionInfo.GetVersionInfo(Path.GetFileName(System.Windows.Forms.Application.ExecutablePath)).FileVersion;
+        // Define warning and error titles.
+        public static readonly string warningTitle = $"WARNING: {FileVersionInfo.GetVersionInfo(Path.GetFileName(System.Windows.Forms.Application.ExecutablePath)).ProductName} v{FileVersionInfo.GetVersionInfo(Path.GetFileName(System.Windows.Forms.Application.ExecutablePath)).FileVersion}";
+        public static readonly string errorTitle   = $"ERROR: {FileVersionInfo.GetVersionInfo(Path.GetFileName(System.Windows.Forms.Application.ExecutablePath)).ProductName} v{FileVersionInfo.GetVersionInfo(Path.GetFileName(System.Windows.Forms.Application.ExecutablePath)).FileVersion}";
 
         // Set the mouse event class.
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -377,25 +378,26 @@ namespace CoreKeeperInventoryEditor
                 toolTip.SetToolTip(Inventory_RichTextBox, "A list of all found addresses. Used mostly for debugging.");
                 toolTip.SetToolTip(PlayerTools_RichTextBox, "A list of all found addresses. Used mostly for debugging.");
 
-                toolTip.SetToolTip(DisplayLocation_ToggleSwith, "Gets the players XY coordinates and displays it.");
-                toolTip.SetToolTip(Godmode_ToggleSwith, "Enabling will prevent the player from being killed.");
-                toolTip.SetToolTip(Speed_ToggleSwith, "Set a custom run speed for the player.");
-                toolTip.SetToolTip(Noclip_ToggleSwith, "Spacebar will allow the player to pass through walls.");
-                toolTip.SetToolTip(InfiniteFood_ToggleSwith, "Enabling will keep the players food replenished.");
-                toolTip.SetToolTip(Suicide_ToggleSwith, "Enabling this will instantly kill the player.");
-                toolTip.SetToolTip(InfiniteResources_ToggleSwith, "Prevents the diminishing of inventory items.");
+                toolTip.SetToolTip(DisplayLocation_ToggleSwitch, "Gets the players XY coordinates and displays it.");
+                toolTip.SetToolTip(Godmode_ToggleSwitch, "Enabling will prevent the player from being killed.");
+                toolTip.SetToolTip(Speed_ToggleSwitch, "Set a custom run speed for the player.");
+                toolTip.SetToolTip(Noclip_ToggleSwitch, "Spacebar will allow the player to pass through walls.");
+                toolTip.SetToolTip(InfiniteFood_ToggleSwitch, "Enabling will keep the players food replenished.");
+                toolTip.SetToolTip(Suicide_ToggleSwitch, "Enabling this will instantly kill the player.");
+                toolTip.SetToolTip(InfiniteResources_ToggleSwitch, "Prevents the diminishing of inventory items.");
                 // OBSOLETE: toolTip.SetToolTip(siticoneWinToggleSwith8, "Prevents being killed or teleported while stuck in walls. Use the t-key to toggle.");
-                toolTip.SetToolTip(InfiniteMana_ToggleSwith, "Enabling will keep the players mana replenished.");
-                toolTip.SetToolTip(ForceRecall_ToggleSwith, "Recalls the player to spawn immediately.");
-                toolTip.SetToolTip(FreeCrafting_ToggleSwith, "Enables the ability to craft without consuming resources.");
-                toolTip.SetToolTip(PassiveAI_ToggleSwith, "Toggles enemies aggression towards the player.");
-                toolTip.SetToolTip(PlaceAnywhere_ToggleSwith, "Enabling will allow the player to place on invalid tiles.");
+                toolTip.SetToolTip(InfiniteMana_ToggleSwitch, "Enabling will keep the players mana replenished.");
+                toolTip.SetToolTip(ForceRecall_ToggleSwitch, "Recalls the player to spawn immediately.");
+                toolTip.SetToolTip(FreeCrafting_ToggleSwitch, "Enables the ability to craft without consuming resources.");
+                toolTip.SetToolTip(PassiveAI_ToggleSwitch, "Toggles enemies aggression towards the player.");
+                toolTip.SetToolTip(PlaceAnywhere_ToggleSwitch, "Enabling will allow the player to place on invalid tiles.");
                 // BROKEN: toolTip.SetToolTip(siticoneWinToggleSwith13, "Enabling will allow the player to adjust the placement range.");
-                toolTip.SetToolTip(Range_ToggleSwith, "Coming back soon...");
-                toolTip.SetToolTip(KeepInventory_ToggleSwith, "Prevents losing inventory items upon death.");
-                toolTip.SetToolTip(TrashInventory_ToggleSwith, "Enabling will continuously remove all items from the inventory. Items will be logged.");
+                toolTip.SetToolTip(Range_ToggleSwitch, "Coming back soon...");
+                toolTip.SetToolTip(KeepInventory_ToggleSwitch, "Prevents losing inventory items upon death.");
+                toolTip.SetToolTip(TrashInventory_ToggleSwitch, "Enabling will continuously remove all items from the inventory. Items will be logged.");
                 // BROKEN: toolTip.SetToolTip(siticoneWinToggleSwith16, "Set a custom max speed for minecarts.");
-                toolTip.SetToolTip(MaxMinecartSpeed_ToggleSwith, "Coming back soon...");
+                toolTip.SetToolTip(MaxMinecartSpeed_ToggleSwitch, "Coming back soon...");
+                toolTip.SetToolTip(FreezeItemSlots_ToggleSwitch, "Adds checkboxes to the inventory editor for freezing an items property(s).");
 
                 toolTip.SetToolTip(OverwriteSlotOne_RadioButton, "Overwrite item slot one.");
                 toolTip.SetToolTip(AddToEmptySlots_RadioButton, "Add item to an empty inventory slot.");
@@ -1045,46 +1047,58 @@ namespace CoreKeeperInventoryEditor
             {
                 // Enable controls.
                 ReloadInventory_Button.Enabled = true; // Reload.
-                RemoveAll_Button.Enabled = true; // Remove all.
+                RemoveAll_Button.Enabled = true;       // Remove all.
 
                 // If scan is larger then 1 result, enable arrow controls.
                 if (AoBScanResultsInventory.Count() > 1)
                 {
                     // Enable arrow buttons.
                     PreviousInvAddress_Button.Enabled = true; // Previous.
-                    NextInvAddress_Button.Enabled = true; // Next.
+                    NextInvAddress_Button.Enabled = true;     // Next.
                 }
                 else
                 {
                     // Disable arrow buttons.
                     PreviousInvAddress_Button.Enabled = false; // Previous.
-                    NextInvAddress_Button.Enabled = false; // Next.
+                    NextInvAddress_Button.Enabled = false;     // Next.
                 }
             }
             else
             {
                 // Disable controls.
-                ReloadInventory_Button.Enabled = false; // Reload.
-                RemoveAll_Button.Enabled = false; // Remove all.
+                ReloadInventory_Button.Enabled = false;    // Reload.
+                RemoveAll_Button.Enabled = false;          // Remove all.
                 PreviousInvAddress_Button.Enabled = false; // Previous.
-                NextInvAddress_Button.Enabled = false; // Next.
+                NextInvAddress_Button.Enabled = false;     // Next.
             }
 
             // Toggle placeholder torches off.
             TogglePlaceholderTorches(false);
 
             // Reset item id richtextbox.
-            Debug_RichTextBox.Text = "If any unknown items are found, their ID's will appear here!" + Environment.NewLine + "------------------------------------------------------------------------------------------------------------" + Environment.NewLine;
+            Debug_RichTextBox.Text = "If any unknown items are found, their ID's will appear here!\n------------------------------------------------------------------------------------------------------------\n";
 
             // Name button to indicate loading.
             GetInventoryAddresses_Button.Text = "Loading Assets...";
 
             // Load Inventory.
-            AddItemToInv(loadInventory: true);
+            AddItemToInv(LoadInventory: true);
         }
 
         // Function for adding items to the players inventory.
-        public void AddItemToInv(int itemSlot = 1, int type = 1, int variation = 0, int amount = 1, int skillset = 0, bool loadInventory = false, bool CycleAll = false, bool ExportInventory = false, bool Overwrite = false, bool GetItemInfo = false, bool AddToEmpty = false)
+        public void AddItemToInv(
+            int ItemSlot         = 1,
+            int Type             = 1,
+            int Variation        = 0,
+            int Amount           = 1,
+            int Skillset         = 0,
+            bool LoadInventory   = false,
+            bool CycleAll        = false,
+            bool ExportInventory = false,
+            bool Overwrite       = false,
+            bool GetItemInfo     = false,
+            bool AddToEmpty      = false
+        )
         {
             #region Add Items Upon Editing
 
@@ -1099,7 +1113,7 @@ namespace CoreKeeperInventoryEditor
                 Inventory_ProgressBar.Value = 0;
                 Inventory_ProgressBar.Visible = false;
 
-                if (!loadInventory) // Prevent double error messages. // Fix: v1.3.4.7.
+                if (!LoadInventory) // Prevent double error messages. // Fix: v1.3.4.7.
                     MessageBox.Show("You need to first scan for the Inventory addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 return;
@@ -1136,7 +1150,7 @@ namespace CoreKeeperInventoryEditor
             int infoVariant = 0;
             int infoSkillset = 0;
 
-            // Define a variable to hold the new item amount information.
+            // Define a variable to hold the new item Amount information.
             int finalItemAmount = 0;
 
             // Select the inventory to use.
@@ -1146,6329 +1160,152 @@ namespace CoreKeeperInventoryEditor
             // Base address was moved 9 bits.
             string baseAddress = BigInteger.Add(BigInteger.Parse(res.ToString("X").ToString(), NumberStyles.HexNumber), BigInteger.Parse("7", NumberStyles.Integer)).ToString("X");
 
+            // Count the total amount of pictureboxes on the inventory tab.
+            int slotCount = Main_TabControl.TabPages["Inventory_TabPage"].Controls.OfType<PictureBox>().Count();
+
             #region Set Inventory Items
 
-            // Remove Existing Images
-            if (loadInventory || CycleAll)
+            // Remove existing images.
+            if (LoadInventory || CycleAll)
             {
-                Slot1_PictureBox.Image = null;
-                Slot2_PictureBox.Image = null;
-                Slot3_PictureBox.Image = null;
-                Slot4_PictureBox.Image = null;
-                Slot5_PictureBox.Image = null;
-                Slot6_PictureBox.Image = null;
-                Slot7_PictureBox.Image = null;
-                Slot8_PictureBox.Image = null;
-                Slot9_PictureBox.Image = null;
-                Slot10_PictureBox.Image = null;
-                Slot11_PictureBox.Image = null;
-                Slot12_PictureBox.Image = null;
-                Slot13_PictureBox.Image = null;
-                Slot14_PictureBox.Image = null;
-                Slot14_PictureBox.Image = null;
-                Slot15_PictureBox.Image = null;
-                Slot16_PictureBox.Image = null;
-                Slot17_PictureBox.Image = null;
-                Slot18_PictureBox.Image = null;
-                Slot19_PictureBox.Image = null;
-                Slot20_PictureBox.Image = null;
-                Slot21_PictureBox.Image = null;
-                Slot22_PictureBox.Image = null;
-                Slot23_PictureBox.Image = null;
-                Slot24_PictureBox.Image = null;
-                Slot25_PictureBox.Image = null;
-                Slot26_PictureBox.Image = null;
-                Slot27_PictureBox.Image = null;
-                Slot28_PictureBox.Image = null;
-                Slot29_PictureBox.Image = null;
-                Slot30_PictureBox.Image = null;
-                Slot31_PictureBox.Image = null;
-                Slot32_PictureBox.Image = null;
-                Slot33_PictureBox.Image = null;
-                Slot34_PictureBox.Image = null;
-                Slot35_PictureBox.Image = null;
-                Slot36_PictureBox.Image = null;
-                Slot37_PictureBox.Image = null;
-                Slot38_PictureBox.Image = null;
-                Slot39_PictureBox.Image = null;
-                Slot40_PictureBox.Image = null;
-                Slot41_PictureBox.Image = null;
-                Slot42_PictureBox.Image = null;
-                Slot43_PictureBox.Image = null;
-                Slot44_PictureBox.Image = null;
-                Slot45_PictureBox.Image = null;
-                Slot46_PictureBox.Image = null;
-                Slot47_PictureBox.Image = null;
-                Slot48_PictureBox.Image = null;
-                Slot49_PictureBox.Image = null;
-                Slot50_PictureBox.Image = null;
+                for (int i = 1; i <= slotCount; i++)
+                {
+                    if (this.Controls.Find($"Slot{i}_PictureBox", searchAllChildren: true).FirstOrDefault() is PictureBox ctrl) ctrl.Image = null;
+                }
             }
 
-            // Make some exception catches
+            // Make some exception catches.
             try
             {
-                // Get Offsets for Inventory.
-                if (!AddToEmpty && (itemSlot == 1 || loadInventory || CycleAll || ExportInventory))
+                // Dynamically populate each item slot.
+                for (int i = 1; i <= slotCount; i++)
                 {
-                    string slot1Item = baseAddress;
-                    string slot1Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("4", NumberStyles.Integer)).ToString("X");
-                    string slot1Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("8", NumberStyles.Integer)).ToString("X");
-                    string slot1Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("16", NumberStyles.Integer)).ToString("X");
+                    // Define the picturebox control.
+                    var slotPictureBoxControl = this.Controls.Find($"Slot{i}_PictureBox", searchAllChildren: true).FirstOrDefault() as PictureBox;
 
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
+                    // Get Offsets for Inventory.
+                    if (!AddToEmpty && (ItemSlot == i || LoadInventory || CycleAll || ExportInventory))
                     {
-                        // Add New Item
-                        MemLib.WriteMemory(slot1Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
+                        // Dynamically get the addresses for each slot property.
+                        string slotItem      = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse((0  + (20 * (i - 1))).ToString(), NumberStyles.Integer)).ToString("X");
+                        string slotAmount    = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse((4  + (20 * (i - 1))).ToString(), NumberStyles.Integer)).ToString("X");
+                        string slotVariation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse((8  + (20 * (i - 1))).ToString(), NumberStyles.Integer)).ToString("X");
+                        string slotSkillset  = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse((16 + (20 * (i - 1))).ToString(), NumberStyles.Integer)).ToString("X");
+
+                        // Perform progress step.
+                        Inventory_ProgressBar.PerformStep();
+
+                        // Set Values
+                        if (!LoadInventory && !ExportInventory && !GetItemInfo)
                         {
-                            MemLib.WriteMemory(slot1Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot1Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot1Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
+                            // Add New Item
+                            MemLib.WriteMemory(slotItem, "int", Type.ToString()); // Write item Type
+                            if (Type == 0)
                             {
-                                MemLib.WriteMemory(slot1Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot1Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot1Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
+                                MemLib.WriteMemory(slotAmount, "int", "0"); // Write item Amount
+                                MemLib.WriteMemory(slotVariation, "int", "0"); // Write item Variation
+                                MemLib.WriteMemory(slotSkillset, "int", "0"); // Write item Skillset
+                                finalItemAmount = 0;
                             }
                             else
                             {
-                                MemLib.WriteMemory(slot1Amount, "int", (MemLib.ReadUInt(slot1Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot1Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot1Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot1Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot1"))
-                            {
-                                ExportPlayerItems.Add("itemSlot1-ID", MemLib.ReadInt(slot1Item));
-                                ExportPlayerItems.Add("itemSlot1-Amount", MemLib.ReadInt(slot1Amount));
-                                ExportPlayerItems.Add("itemSlot1-Variation", MemLib.ReadInt(slot1Variation));
-                                ExportPlayerItems.Add("itemSlot1-Skillset", MemLib.ReadInt(slot1Skillset));
+                                if (Overwrite)
+                                {
+                                    MemLib.WriteMemory(slotAmount, "int", Amount.ToString()); // Write item Amount
+                                    MemLib.WriteMemory(slotVariation, "int", Variation.ToString()); // Write item Variation
+                                    MemLib.WriteMemory(slotSkillset, "int", Skillset.ToString()); // Write item Skillset
+                                    finalItemAmount = Amount;
+                                }
+                                else
+                                {
+                                    MemLib.WriteMemory(slotAmount, "int", (MemLib.ReadUInt(slotAmount) + Amount).ToString()); // Write item Amount
+                                    MemLib.WriteMemory(slotVariation, "int", Variation.ToString()); // Write item Variation
+                                    MemLib.WriteMemory(slotSkillset, "int", Skillset.ToString()); // Write item Skillset
+                                    finalItemAmount = (int)MemLib.ReadUInt(slotAmount);
+                                }
                             }
                         }
                         else
                         {
-                            // First Load
-                            type = MemLib.ReadInt(slot1Item);
-                            variation = MemLib.ReadInt(slot1Variation);
-                            skillset = MemLib.ReadInt(slot1Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
+                            // Export inventory to list.
+                            if (ExportInventory)
                             {
-                                Slot1_PictureBox.Image = null;
-                            }
-                            else if (Slot1_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
+                                if (!ExportPlayerItems.ContainsKey($"itemSlot{i}"))
                                 {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot1_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot1_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot1_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot1_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot1_PictureBox.Image = Resources.UnknownItem;
-                                        Slot1_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                                    ExportPlayerItems.Add($"itemSlot{i}-ID", MemLib.ReadInt(slotItem));
+                                    ExportPlayerItems.Add($"itemSlot{i}-Amount", MemLib.ReadInt(slotAmount));
+                                    ExportPlayerItems.Add($"itemSlot{i}-Variation", MemLib.ReadInt(slotVariation));
+                                    ExportPlayerItems.Add($"itemSlot{i}-Skillset", MemLib.ReadInt(slotSkillset));
+                                }
+                            }
+                            else
+                            {
+                                // First Load
+                                Type = MemLib.ReadInt(slotItem);
+                                Variation = MemLib.ReadInt(slotVariation);
+                                Skillset = MemLib.ReadInt(slotSkillset);
 
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 1 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot1Amount) + " | Variation: " + (MemLib.ReadInt(slot1Variation)) + " | Skillset: " + (MemLib.ReadInt(slot1Skillset)))) == false) // Check if entree exists already.
+                                // Load Picture
+                                // Set image to null if Type is zero.
+                                if (Type.ToString() == "0")
+                                {
+                                    slotPictureBoxControl.Image = null;
+                                }
+                                else if (slotPictureBoxControl.Image == null)
+                                {
+                                    // Get Picture
+                                    try
+                                    {
+                                        // Check if image plus Variation exists.
+                                        if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == Type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (Variation == 0 ? 0 : Variation).ToString()) != null)
                                         {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 1 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot1Amount) + " | Variation: " + (MemLib.ReadInt(slot1Variation)) + " | Skillset: " + (MemLib.ReadInt(slot1Skillset)) + Environment.NewLine); // Record the missing values.
+                                            slotPictureBoxControl.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == Type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (Variation == 0 ? 0 : Variation).ToString()))); // Check if file matches current Type, set it.
+                                            slotPictureBoxControl.SizeMode = PictureBoxSizeMode.Zoom;
                                         }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot1_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot1Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot1_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot1Item);
-                        infoAmount = MemLib.ReadInt(slot1Amount);
-                        infoVariant = MemLib.ReadInt(slot1Variation);
-                        infoSkillset = MemLib.ReadInt(slot1Skillset);
-                    }
-                }
-                if (itemSlot == 2 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot2Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("20", NumberStyles.Integer)).ToString("X");
-                    string slot2Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("24", NumberStyles.Integer)).ToString("X");
-                    string slot2Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("28", NumberStyles.Integer)).ToString("X");
-                    string slot2Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("36", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot2Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot2Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot2Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot2Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot2Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot2Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot2Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot2Amount, "int", (MemLib.ReadUInt(slot2Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot2Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot2Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot2Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot2"))
-                            {
-                                ExportPlayerItems.Add("itemSlot2-ID", MemLib.ReadInt(slot2Item));
-                                ExportPlayerItems.Add("itemSlot2-Amount", MemLib.ReadInt(slot2Amount));
-                                ExportPlayerItems.Add("itemSlot2-Variation", MemLib.ReadInt(slot2Variation));
-                                ExportPlayerItems.Add("itemSlot2-Skillset", MemLib.ReadInt(slot2Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot2Item);
-                            variation = MemLib.ReadInt(slot2Variation);
-                            skillset = MemLib.ReadInt(slot2Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot2_PictureBox.Image = null;
-                            }
-                            else if (Slot2_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot2_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot2_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot2_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot2_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot2_PictureBox.Image = Resources.UnknownItem;
-                                        Slot2_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 2 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot2Amount) + " | Variation: " + (MemLib.ReadInt(slot2Variation)) + " | Skillset: " + (MemLib.ReadInt(slot2Skillset)))) == false) // Check if entree exists already.
+                                        else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == Type.ToString()) != null)
                                         {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 2 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot2Amount) + " | Variation: " + (MemLib.ReadInt(slot2Variation)) + " | Skillset: " + (MemLib.ReadInt(slot2Skillset)) + Environment.NewLine); // Record the missing values.
+                                            // Image without Variation exists.
+                                            slotPictureBoxControl.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == Type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current Type, set it.
+                                            slotPictureBoxControl.SizeMode = PictureBoxSizeMode.Zoom;
                                         }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot2_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot2Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot2_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot2Item);
-                        infoAmount = MemLib.ReadInt(slot2Amount);
-                        infoVariant = MemLib.ReadInt(slot2Variation);
-                        infoSkillset = MemLib.ReadInt(slot2Skillset);
-                    }
-                }
-                if (itemSlot == 3 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot3Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("40", NumberStyles.Integer)).ToString("X");
-                    string slot3Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("44", NumberStyles.Integer)).ToString("X");
-                    string slot3Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("48", NumberStyles.Integer)).ToString("X");
-                    string slot3Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("56", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot3Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot3Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot3Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot3Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot3Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot3Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot3Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot3Amount, "int", (MemLib.ReadUInt(slot3Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot3Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot3Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot3Amount); // Update slots amount. // Lost and found fix v1.3.3.1.
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot3"))
-                            {
-                                ExportPlayerItems.Add("itemSlot3-ID", MemLib.ReadInt(slot3Item));
-                                ExportPlayerItems.Add("itemSlot3-Amount", MemLib.ReadInt(slot3Amount));
-                                ExportPlayerItems.Add("itemSlot3-Variation", MemLib.ReadInt(slot3Variation));
-                                ExportPlayerItems.Add("itemSlot3-Skillset", MemLib.ReadInt(slot3Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot3Item);
-                            variation = MemLib.ReadInt(slot3Variation);
-                            skillset = MemLib.ReadInt(slot3Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot3_PictureBox.Image = null;
-                            }
-                            else if (Slot3_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot3_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot3_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot3_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot3_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot3_PictureBox.Image = Resources.UnknownItem;
-                                        Slot3_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 3 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot3Amount) + " | Variation: " + (MemLib.ReadInt(slot3Variation)) + " | Skillset: " + (MemLib.ReadInt(slot3Skillset)))) == false) // Check if entree exists already.
+                                        else
                                         {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 3 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot3Amount) + " | Variation: " + (MemLib.ReadInt(slot3Variation)) + " | Skillset: " + (MemLib.ReadInt(slot3Skillset)) + Environment.NewLine); // Record the missing values.
+                                            // No image found.
+                                            slotPictureBoxControl.Image = Resources.UnknownItem;
+                                            slotPictureBoxControl.SizeMode = PictureBoxSizeMode.Zoom;
+
+                                            // Do debug information.
+                                            if (Array.Exists(Debug_RichTextBox.Lines, element => element == $"ItemSlot: {i} | ItemID: {Type} | Amount: {MemLib.ReadInt(slotAmount)} | Variation: {MemLib.ReadInt(slotVariation)} | Skillset: {MemLib.ReadInt(slotSkillset)}") == false) // Check if entree exists already.
+                                            {
+                                                Debug_RichTextBox.AppendText($"ItemSlot: {i} | ItemID: {Type} | Amount: {MemLib.ReadInt(slotAmount)} | Variation: {MemLib.ReadInt(slotVariation)} | Skillset: {MemLib.ReadInt(slotSkillset)}" + Environment.NewLine); // Record the missing values.
+                                            }
                                         }
-                                    }
 
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot3_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot3Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot3_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot3Item);
-                        infoAmount = MemLib.ReadInt(slot3Amount);
-                        infoVariant = MemLib.ReadInt(slot3Variation);
-                        infoSkillset = MemLib.ReadInt(slot3Skillset);
-                    }
-                }
-                if (itemSlot == 4 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot4Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("60", NumberStyles.Integer)).ToString("X");
-                    string slot4Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("64", NumberStyles.Integer)).ToString("X");
-                    string slot4Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("68", NumberStyles.Integer)).ToString("X");
-                    string slot4Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("76", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot4Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot4Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot4Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot4Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot4Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot4Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot4Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot4Amount, "int", (MemLib.ReadUInt(slot4Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot4Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot4Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot4Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot4"))
-                            {
-                                ExportPlayerItems.Add("itemSlot4-ID", MemLib.ReadInt(slot4Item));
-                                ExportPlayerItems.Add("itemSlot4-Amount", MemLib.ReadInt(slot4Amount));
-                                ExportPlayerItems.Add("itemSlot4-Variation", MemLib.ReadInt(slot4Variation));
-                                ExportPlayerItems.Add("itemSlot4-Skillset", MemLib.ReadInt(slot4Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot4Item);
-                            variation = MemLib.ReadInt(slot4Variation);
-                            skillset = MemLib.ReadInt(slot4Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot4_PictureBox.Image = null;
-                            }
-                            else if (Slot4_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot4_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot4_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot4_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot4_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot4_PictureBox.Image = Resources.UnknownItem;
-                                        Slot4_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 4 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot4Amount) + " | Variation: " + (MemLib.ReadInt(slot4Variation)) + " | Skillset: " + (MemLib.ReadInt(slot4Skillset)))) == false) // Check if entree exists already.
+                                        // Draw item Amount.
+                                        using (Font font = new Font("Arial", 24f))
+                                        using (Graphics G = Graphics.FromImage(slotPictureBoxControl?.Image))
+                                        using (GraphicsPath gp = new GraphicsPath())
                                         {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 4 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot4Amount) + " | Variation: " + (MemLib.ReadInt(slot4Variation)) + " | Skillset: " + (MemLib.ReadInt(slot4Skillset)) + Environment.NewLine); // Record the missing values.
+                                            // Do drawling actions.
+                                            gp.AddString(MemLib.ReadInt(slotAmount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
+                                            G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
+                                            G.FillPath(new SolidBrush(Color.White), gp);
                                         }
+                                        slotPictureBoxControl?.Invalidate(); // Reload picturebox.
                                     }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot4_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot4Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot4_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot4Item);
-                        infoAmount = MemLib.ReadInt(slot4Amount);
-                        infoVariant = MemLib.ReadInt(slot4Variation);
-                        infoSkillset = MemLib.ReadInt(slot4Skillset);
-                    }
-                }
-                if (itemSlot == 5 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot5Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("80", NumberStyles.Integer)).ToString("X");
-                    string slot5Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("84", NumberStyles.Integer)).ToString("X");
-                    string slot5Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("88", NumberStyles.Integer)).ToString("X");
-                    string slot5Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("96", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot5Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot5Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot5Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot5Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot5Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot5Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot5Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot5Amount, "int", (MemLib.ReadUInt(slot5Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot5Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot5Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot5Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot5"))
-                            {
-                                ExportPlayerItems.Add("itemSlot5-ID", MemLib.ReadInt(slot5Item));
-                                ExportPlayerItems.Add("itemSlot5-Amount", MemLib.ReadInt(slot5Amount));
-                                ExportPlayerItems.Add("itemSlot5-Variation", MemLib.ReadInt(slot5Variation));
-                                ExportPlayerItems.Add("itemSlot5-Skillset", MemLib.ReadInt(slot5Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot5Item);
-                            variation = MemLib.ReadInt(slot5Variation);
-                            skillset = MemLib.ReadInt(slot5Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot5_PictureBox.Image = null;
-                            }
-                            else if (Slot5_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot5_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot5_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot5_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot5_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot5_PictureBox.Image = Resources.UnknownItem;
-                                        Slot5_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 5 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot5Amount) + " | Variation: " + (MemLib.ReadInt(slot5Variation)) + " | Skillset: " + (MemLib.ReadInt(slot5Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 5 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot5Amount) + " | Variation: " + (MemLib.ReadInt(slot5Variation)) + " | Skillset: " + (MemLib.ReadInt(slot5Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot5_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot5Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot5_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot5Item);
-                        infoAmount = MemLib.ReadInt(slot5Amount);
-                        infoVariant = MemLib.ReadInt(slot5Variation);
-                        infoSkillset = MemLib.ReadInt(slot5Skillset);
-                    }
-                }
-                if (itemSlot == 6 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot6Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("100", NumberStyles.Integer)).ToString("X");
-                    string slot6Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("104", NumberStyles.Integer)).ToString("X");
-                    string slot6Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("108", NumberStyles.Integer)).ToString("X");
-                    string slot6Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("116", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot6Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot6Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot6Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot6Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot6Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot6Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot6Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot6Amount, "int", (MemLib.ReadUInt(slot6Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot6Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot6Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot6Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot6"))
-                            {
-                                ExportPlayerItems.Add("itemSlot6-ID", MemLib.ReadInt(slot6Item));
-                                ExportPlayerItems.Add("itemSlot6-Amount", MemLib.ReadInt(slot6Amount));
-                                ExportPlayerItems.Add("itemSlot6-Variation", MemLib.ReadInt(slot6Variation));
-                                ExportPlayerItems.Add("itemSlot6-Skillset", MemLib.ReadInt(slot6Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot6Item);
-                            variation = MemLib.ReadInt(slot6Variation);
-                            skillset = MemLib.ReadInt(slot6Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot6_PictureBox.Image = null;
-                            }
-                            else if (Slot6_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot6_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot6_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot6_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot6_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot6_PictureBox.Image = Resources.UnknownItem;
-                                        Slot6_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 6 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot6Amount) + " | Variation: " + (MemLib.ReadInt(slot6Variation)) + " | Skillset: " + (MemLib.ReadInt(slot6Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 6 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot6Amount) + " | Variation: " + (MemLib.ReadInt(slot6Variation)) + " | Skillset: " + (MemLib.ReadInt(slot6Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot6_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot6Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot6_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot6Item);
-                        infoAmount = MemLib.ReadInt(slot6Amount);
-                        infoVariant = MemLib.ReadInt(slot6Variation);
-                        infoSkillset = MemLib.ReadInt(slot6Skillset);
-                    }
-                }
-                if (itemSlot == 7 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot7Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("120", NumberStyles.Integer)).ToString("X");
-                    string slot7Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("124", NumberStyles.Integer)).ToString("X");
-                    string slot7Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("128", NumberStyles.Integer)).ToString("X");
-                    string slot7Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("136", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot7Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot7Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot7Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot7Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot7Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot7Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot7Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot7Amount, "int", (MemLib.ReadUInt(slot7Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot7Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot7Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot7Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot7"))
-                            {
-                                ExportPlayerItems.Add("itemSlot7-ID", MemLib.ReadInt(slot7Item));
-                                ExportPlayerItems.Add("itemSlot7-Amount", MemLib.ReadInt(slot7Amount));
-                                ExportPlayerItems.Add("itemSlot7-Variation", MemLib.ReadInt(slot7Variation));
-                                ExportPlayerItems.Add("itemSlot7-Skillset", MemLib.ReadInt(slot7Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot7Item);
-                            variation = MemLib.ReadInt(slot7Variation);
-                            skillset = MemLib.ReadInt(slot7Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot7_PictureBox.Image = null;
-                            }
-                            else if (Slot7_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot7_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot7_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot7_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot7_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot7_PictureBox.Image = Resources.UnknownItem;
-                                        Slot7_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 7 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot7Amount) + " | Variation: " + (MemLib.ReadInt(slot7Variation)) + " | Skillset: " + (MemLib.ReadInt(slot7Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 7 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot7Amount) + " | Variation: " + (MemLib.ReadInt(slot7Variation)) + " | Skillset: " + (MemLib.ReadInt(slot7Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot7_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot7Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot7_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot7Item);
-                        infoAmount = MemLib.ReadInt(slot7Amount);
-                        infoVariant = MemLib.ReadInt(slot7Variation);
-                        infoSkillset = MemLib.ReadInt(slot7Skillset);
-                    }
-                }
-                if (itemSlot == 8 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot8Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("140", NumberStyles.Integer)).ToString("X");
-                    string slot8Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("144", NumberStyles.Integer)).ToString("X");
-                    string slot8Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("148", NumberStyles.Integer)).ToString("X");
-                    string slot8Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("156", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot8Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot8Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot8Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot8Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot8Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot8Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot8Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot8Amount, "int", (MemLib.ReadUInt(slot8Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot8Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot8Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot8Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot8"))
-                            {
-                                ExportPlayerItems.Add("itemSlot8-ID", MemLib.ReadInt(slot8Item));
-                                ExportPlayerItems.Add("itemSlot8-Amount", MemLib.ReadInt(slot8Amount));
-                                ExportPlayerItems.Add("itemSlot8-Variation", MemLib.ReadInt(slot8Variation));
-                                ExportPlayerItems.Add("itemSlot8-Skillset", MemLib.ReadInt(slot8Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot8Item);
-                            variation = MemLib.ReadInt(slot8Variation);
-                            skillset = MemLib.ReadInt(slot8Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot8_PictureBox.Image = null;
-                            }
-                            else if (Slot8_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot8_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot8_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot8_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot8_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot8_PictureBox.Image = Resources.UnknownItem;
-                                        Slot8_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 8 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot8Amount) + " | Variation: " + (MemLib.ReadInt(slot8Variation)) + " | Skillset: " + (MemLib.ReadInt(slot8Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 8 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot8Amount) + " | Variation: " + (MemLib.ReadInt(slot8Variation)) + " | Skillset: " + (MemLib.ReadInt(slot8Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot8_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot8Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot8_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot8Item);
-                        infoAmount = MemLib.ReadInt(slot8Amount);
-                        infoVariant = MemLib.ReadInt(slot8Variation);
-                        infoSkillset = MemLib.ReadInt(slot8Skillset);
-                    }
-                }
-                if (itemSlot == 9 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot9Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("160", NumberStyles.Integer)).ToString("X");
-                    string slot9Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("164", NumberStyles.Integer)).ToString("X");
-                    string slot9Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("168", NumberStyles.Integer)).ToString("X");
-                    string slot9Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("176", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot9Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot9Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot9Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot9Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot9Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot9Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot9Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot9Amount, "int", (MemLib.ReadUInt(slot9Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot9Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot9Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot9Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot9"))
-                            {
-                                ExportPlayerItems.Add("itemSlot9-ID", MemLib.ReadInt(slot9Item));
-                                ExportPlayerItems.Add("itemSlot9-Amount", MemLib.ReadInt(slot9Amount));
-                                ExportPlayerItems.Add("itemSlot9-Variation", MemLib.ReadInt(slot9Variation));
-                                ExportPlayerItems.Add("itemSlot9-Skillset", MemLib.ReadInt(slot9Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot9Item);
-                            variation = MemLib.ReadInt(slot9Variation);
-                            skillset = MemLib.ReadInt(slot9Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot9_PictureBox.Image = null;
-                            }
-                            else if (Slot9_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot9_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot9_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot9_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot9_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot9_PictureBox.Image = Resources.UnknownItem;
-                                        Slot9_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 9 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot9Amount) + " | Variation: " + (MemLib.ReadInt(slot9Variation)) + " | Skillset: " + (MemLib.ReadInt(slot9Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 9 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot9Amount) + " | Variation: " + (MemLib.ReadInt(slot9Variation)) + " | Skillset: " + (MemLib.ReadInt(slot9Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot9_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot9Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot9_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot9Item);
-                        infoAmount = MemLib.ReadInt(slot9Amount);
-                        infoVariant = MemLib.ReadInt(slot9Variation);
-                        infoSkillset = MemLib.ReadInt(slot9Skillset);
-                    }
-                }
-                if (itemSlot == 10 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot10Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("180", NumberStyles.Integer)).ToString("X");
-                    string slot10Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("184", NumberStyles.Integer)).ToString("X");
-                    string slot10Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("188", NumberStyles.Integer)).ToString("X");
-                    string slot10Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("196", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot10Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot10Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot10Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot10Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot10Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot10Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot10Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot10Amount, "int", (MemLib.ReadUInt(slot10Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot10Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot10Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot10Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot10"))
-                            {
-                                ExportPlayerItems.Add("itemSlot10-ID", MemLib.ReadInt(slot10Item));
-                                ExportPlayerItems.Add("itemSlot10-Amount", MemLib.ReadInt(slot10Amount));
-                                ExportPlayerItems.Add("itemSlot10-Variation", MemLib.ReadInt(slot10Variation));
-                                ExportPlayerItems.Add("itemSlot10-Skillset", MemLib.ReadInt(slot10Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot10Item);
-                            variation = MemLib.ReadInt(slot10Variation);
-                            skillset = MemLib.ReadInt(slot10Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot10_PictureBox.Image = null;
-                            }
-                            else if (Slot10_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot10_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot10_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot10_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot10_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot10_PictureBox.Image = Resources.UnknownItem;
-                                        Slot10_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 10 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot10Amount) + " | Variation: " + (MemLib.ReadInt(slot10Variation)) + " | Skillset: " + (MemLib.ReadInt(slot10Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 10 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot10Amount) + " | Variation: " + (MemLib.ReadInt(slot10Variation)) + " | Skillset: " + (MemLib.ReadInt(slot10Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot10_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot10Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot10_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot10Item);
-                        infoAmount = MemLib.ReadInt(slot10Amount);
-                        infoVariant = MemLib.ReadInt(slot10Variation);
-                        infoSkillset = MemLib.ReadInt(slot10Skillset);
-                    }
-                }
-                if (itemSlot == 11 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot11Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("200", NumberStyles.Integer)).ToString("X");
-                    string slot11Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("204", NumberStyles.Integer)).ToString("X");
-                    string slot11Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("208", NumberStyles.Integer)).ToString("X");
-                    string slot11Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("216", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot11Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot11Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot11Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot11Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot11Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot11Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot11Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot11Amount, "int", (MemLib.ReadUInt(slot11Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot11Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot11Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot11Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot11"))
-                            {
-                                ExportPlayerItems.Add("itemSlot11-ID", MemLib.ReadInt(slot11Item));
-                                ExportPlayerItems.Add("itemSlot11-Amount", MemLib.ReadInt(slot11Amount));
-                                ExportPlayerItems.Add("itemSlot11-Variation", MemLib.ReadInt(slot11Variation));
-                                ExportPlayerItems.Add("itemSlot11-Skillset", MemLib.ReadInt(slot11Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot11Item);
-                            variation = MemLib.ReadInt(slot11Variation);
-                            skillset = MemLib.ReadInt(slot11Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot11_PictureBox.Image = null;
-                            }
-                            else if (Slot11_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot11_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot11_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot11_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot11_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot11_PictureBox.Image = Resources.UnknownItem;
-                                        Slot11_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 11 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot11Amount) + " | Variation: " + (MemLib.ReadInt(slot11Variation)) + " | Skillset: " + (MemLib.ReadInt(slot11Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 11 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot11Amount) + " | Variation: " + (MemLib.ReadInt(slot11Variation)) + " | Skillset: " + (MemLib.ReadInt(slot11Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot11_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot11Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot11_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot11Item);
-                        infoAmount = MemLib.ReadInt(slot11Amount);
-                        infoVariant = MemLib.ReadInt(slot11Variation);
-                        infoSkillset = MemLib.ReadInt(slot11Skillset);
-                    }
-                }
-                if (itemSlot == 12 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot12Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("220", NumberStyles.Integer)).ToString("X");
-                    string slot12Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("224", NumberStyles.Integer)).ToString("X");
-                    string slot12Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("228", NumberStyles.Integer)).ToString("X");
-                    string slot12Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("236", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot12Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot12Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot12Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot12Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot12Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot12Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot12Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot12Amount, "int", (MemLib.ReadUInt(slot12Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot12Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot12Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot12Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot12"))
-                            {
-                                ExportPlayerItems.Add("itemSlot12-ID", MemLib.ReadInt(slot12Item));
-                                ExportPlayerItems.Add("itemSlot12-Amount", MemLib.ReadInt(slot12Amount));
-                                ExportPlayerItems.Add("itemSlot12-Variation", MemLib.ReadInt(slot12Variation));
-                                ExportPlayerItems.Add("itemSlot12-Skillset", MemLib.ReadInt(slot12Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot12Item);
-                            variation = MemLib.ReadInt(slot12Variation);
-                            skillset = MemLib.ReadInt(slot12Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot12_PictureBox.Image = null;
-                            }
-                            else if (Slot12_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot12_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot12_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot12_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot12_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot12_PictureBox.Image = Resources.UnknownItem;
-                                        Slot12_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 12 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot12Amount) + " | Variation: " + (MemLib.ReadInt(slot12Variation)) + " | Skillset: " + (MemLib.ReadInt(slot12Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 12 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot12Amount) + " | Variation: " + (MemLib.ReadInt(slot12Variation)) + " | Skillset: " + (MemLib.ReadInt(slot12Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot12_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot12Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot12_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot12Item);
-                        infoAmount = MemLib.ReadInt(slot12Amount);
-                        infoVariant = MemLib.ReadInt(slot12Variation);
-                        infoSkillset = MemLib.ReadInt(slot12Skillset);
-                    }
-                }
-                if (itemSlot == 13 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot13Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("240", NumberStyles.Integer)).ToString("X");
-                    string slot13Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("244", NumberStyles.Integer)).ToString("X");
-                    string slot13Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("248", NumberStyles.Integer)).ToString("X");
-                    string slot13Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("256", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot13Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot13Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot13Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot13Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot13Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot13Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot13Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot13Amount, "int", (MemLib.ReadUInt(slot13Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot13Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot13Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot13Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot13"))
-                            {
-                                ExportPlayerItems.Add("itemSlot13-ID", MemLib.ReadInt(slot13Item));
-                                ExportPlayerItems.Add("itemSlot13-Amount", MemLib.ReadInt(slot13Amount));
-                                ExportPlayerItems.Add("itemSlot13-Variation", MemLib.ReadInt(slot13Variation));
-                                ExportPlayerItems.Add("itemSlot13-Skillset", MemLib.ReadInt(slot13Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot13Item);
-                            variation = MemLib.ReadInt(slot13Variation);
-                            skillset = MemLib.ReadInt(slot13Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot13_PictureBox.Image = null;
-                            }
-                            else if (Slot13_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot13_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot13_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot13_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot13_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot13_PictureBox.Image = Resources.UnknownItem;
-                                        Slot13_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 13 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot13Amount) + " | Variation: " + (MemLib.ReadInt(slot13Variation)) + " | Skillset: " + (MemLib.ReadInt(slot13Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 13 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot13Amount) + " | Variation: " + (MemLib.ReadInt(slot13Variation)) + " | Skillset: " + (MemLib.ReadInt(slot13Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot13_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot13Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot13_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot13Item);
-                        infoAmount = MemLib.ReadInt(slot13Amount);
-                        infoVariant = MemLib.ReadInt(slot13Variation);
-                        infoSkillset = MemLib.ReadInt(slot13Skillset);
-                    }
-                }
-                if (itemSlot == 14 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot14Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("260", NumberStyles.Integer)).ToString("X");
-                    string slot14Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("264", NumberStyles.Integer)).ToString("X");
-                    string slot14Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("268", NumberStyles.Integer)).ToString("X");
-                    string slot14Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("276", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot14Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot14Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot14Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot14Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot14Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot14Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot14Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot14Amount, "int", (MemLib.ReadUInt(slot14Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot14Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot14Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot14Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot14"))
-                            {
-                                ExportPlayerItems.Add("itemSlot14-ID", MemLib.ReadInt(slot14Item));
-                                ExportPlayerItems.Add("itemSlot14-Amount", MemLib.ReadInt(slot14Amount));
-                                ExportPlayerItems.Add("itemSlot14-Variation", MemLib.ReadInt(slot14Variation));
-                                ExportPlayerItems.Add("itemSlot14-Skillset", MemLib.ReadInt(slot14Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot14Item);
-                            variation = MemLib.ReadInt(slot14Variation);
-                            skillset = MemLib.ReadInt(slot14Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot14_PictureBox.Image = null;
-                            }
-                            else if (Slot14_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot14_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot14_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot14_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot14_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot14_PictureBox.Image = Resources.UnknownItem;
-                                        Slot14_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 14 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot14Amount) + " | Variation: " + (MemLib.ReadInt(slot14Variation)) + " | Skillset: " + (MemLib.ReadInt(slot14Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 14 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot14Amount) + " | Variation: " + (MemLib.ReadInt(slot14Variation)) + " | Skillset: " + (MemLib.ReadInt(slot14Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot14_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot14Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot14_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot14Item);
-                        infoAmount = MemLib.ReadInt(slot14Amount);
-                        infoVariant = MemLib.ReadInt(slot14Variation);
-                        infoSkillset = MemLib.ReadInt(slot14Skillset);
-                    }
-                }
-                if (itemSlot == 15 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot15Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("280", NumberStyles.Integer)).ToString("X");
-                    string slot15Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("284", NumberStyles.Integer)).ToString("X");
-                    string slot15Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("288", NumberStyles.Integer)).ToString("X");
-                    string slot15Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("296", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot15Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot15Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot15Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot15Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot15Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot15Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot15Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot15Amount, "int", (MemLib.ReadUInt(slot15Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot15Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot15Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot15Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot15"))
-                            {
-                                ExportPlayerItems.Add("itemSlot15-ID", MemLib.ReadInt(slot15Item));
-                                ExportPlayerItems.Add("itemSlot15-Amount", MemLib.ReadInt(slot15Amount));
-                                ExportPlayerItems.Add("itemSlot15-Variation", MemLib.ReadInt(slot15Variation));
-                                ExportPlayerItems.Add("itemSlot15-Skillset", MemLib.ReadInt(slot15Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot15Item);
-                            variation = MemLib.ReadInt(slot15Variation);
-                            skillset = MemLib.ReadInt(slot15Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot15_PictureBox.Image = null;
-                            }
-                            else if (Slot15_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot15_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot15_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot15_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot15_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot15_PictureBox.Image = Resources.UnknownItem;
-                                        Slot15_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 15 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot15Amount) + " | Variation: " + (MemLib.ReadInt(slot15Variation)) + " | Skillset: " + (MemLib.ReadInt(slot15Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 15 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot15Amount) + " | Variation: " + (MemLib.ReadInt(slot15Variation)) + " | Skillset: " + (MemLib.ReadInt(slot15Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot15_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot15Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot15_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot15Item);
-                        infoAmount = MemLib.ReadInt(slot15Amount);
-                        infoVariant = MemLib.ReadInt(slot15Variation);
-                        infoSkillset = MemLib.ReadInt(slot15Skillset);
-                    }
-                }
-                if (itemSlot == 16 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot16Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("300", NumberStyles.Integer)).ToString("X");
-                    string slot16Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("304", NumberStyles.Integer)).ToString("X");
-                    string slot16Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("308", NumberStyles.Integer)).ToString("X");
-                    string slot16Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("316", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot16Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot16Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot16Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot16Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot16Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot16Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot16Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot16Amount, "int", (MemLib.ReadUInt(slot16Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot16Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot16Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot16Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot16"))
-                            {
-                                ExportPlayerItems.Add("itemSlot16-ID", MemLib.ReadInt(slot16Item));
-                                ExportPlayerItems.Add("itemSlot16-Amount", MemLib.ReadInt(slot16Amount));
-                                ExportPlayerItems.Add("itemSlot16-Variation", MemLib.ReadInt(slot16Variation));
-                                ExportPlayerItems.Add("itemSlot16-Skillset", MemLib.ReadInt(slot16Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot16Item);
-                            variation = MemLib.ReadInt(slot16Variation);
-                            skillset = MemLib.ReadInt(slot16Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot16_PictureBox.Image = null;
-                            }
-                            else if (Slot16_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot16_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot16_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot16_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot16_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot16_PictureBox.Image = Resources.UnknownItem;
-                                        Slot16_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 16 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot16Amount) + " | Variation: " + (MemLib.ReadInt(slot16Variation)) + " | Skillset: " + (MemLib.ReadInt(slot16Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 16 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot16Amount) + " | Variation: " + (MemLib.ReadInt(slot16Variation)) + " | Skillset: " + (MemLib.ReadInt(slot16Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot16_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot16Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot16_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot16Item);
-                        infoAmount = MemLib.ReadInt(slot16Amount);
-                        infoVariant = MemLib.ReadInt(slot16Variation);
-                        infoSkillset = MemLib.ReadInt(slot16Skillset);
-                    }
-                }
-                if (itemSlot == 17 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot17Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("320", NumberStyles.Integer)).ToString("X");
-                    string slot17Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("324", NumberStyles.Integer)).ToString("X");
-                    string slot17Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("328", NumberStyles.Integer)).ToString("X");
-                    string slot17Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("336", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot17Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot17Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot17Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot17Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot17Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot17Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot17Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot17Amount, "int", (MemLib.ReadUInt(slot17Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot17Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot17Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot17Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot17"))
-                            {
-                                ExportPlayerItems.Add("itemSlot17-ID", MemLib.ReadInt(slot17Item));
-                                ExportPlayerItems.Add("itemSlot17-Amount", MemLib.ReadInt(slot17Amount));
-                                ExportPlayerItems.Add("itemSlot17-Variation", MemLib.ReadInt(slot17Variation));
-                                ExportPlayerItems.Add("itemSlot17-Skillset", MemLib.ReadInt(slot17Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot17Item);
-                            variation = MemLib.ReadInt(slot17Variation);
-                            skillset = MemLib.ReadInt(slot17Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot17_PictureBox.Image = null;
-                            }
-                            else if (Slot17_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot17_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot17_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot17_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot17_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot17_PictureBox.Image = Resources.UnknownItem;
-                                        Slot17_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 17 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot17Amount) + " | Variation: " + (MemLib.ReadInt(slot17Variation)) + " | Skillset: " + (MemLib.ReadInt(slot17Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 17 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot17Amount) + " | Variation: " + (MemLib.ReadInt(slot17Variation)) + " | Skillset: " + (MemLib.ReadInt(slot17Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot17_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot17Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot17_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot17Item);
-                        infoAmount = MemLib.ReadInt(slot17Amount);
-                        infoVariant = MemLib.ReadInt(slot17Variation);
-                        infoSkillset = MemLib.ReadInt(slot17Skillset);
-                    }
-                }
-                if (itemSlot == 18 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot18Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("340", NumberStyles.Integer)).ToString("X");
-                    string slot18Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("344", NumberStyles.Integer)).ToString("X");
-                    string slot18Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("348", NumberStyles.Integer)).ToString("X");
-                    string slot18Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("356", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot18Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot18Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot18Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot18Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot18Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot18Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot18Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot18Amount, "int", (MemLib.ReadUInt(slot18Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot18Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot18Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot18Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot18"))
-                            {
-                                ExportPlayerItems.Add("itemSlot18-ID", MemLib.ReadInt(slot18Item));
-                                ExportPlayerItems.Add("itemSlot18-Amount", MemLib.ReadInt(slot18Amount));
-                                ExportPlayerItems.Add("itemSlot18-Variation", MemLib.ReadInt(slot18Variation));
-                                ExportPlayerItems.Add("itemSlot18-Skillset", MemLib.ReadInt(slot18Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot18Item);
-                            variation = MemLib.ReadInt(slot18Variation);
-                            skillset = MemLib.ReadInt(slot18Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot18_PictureBox.Image = null;
-                            }
-                            else if (Slot18_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot18_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot18_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot18_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot18_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot18_PictureBox.Image = Resources.UnknownItem;
-                                        Slot18_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 18 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot18Amount) + " | Variation: " + (MemLib.ReadInt(slot18Variation)) + " | Skillset: " + (MemLib.ReadInt(slot18Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 18 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot18Amount) + " | Variation: " + (MemLib.ReadInt(slot18Variation)) + " | Skillset: " + (MemLib.ReadInt(slot18Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot18_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot18Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot18_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot18Item);
-                        infoAmount = MemLib.ReadInt(slot18Amount);
-                        infoVariant = MemLib.ReadInt(slot18Variation);
-                        infoSkillset = MemLib.ReadInt(slot18Skillset);
-                    }
-                }
-                if (itemSlot == 19 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot19Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("360", NumberStyles.Integer)).ToString("X");
-                    string slot19Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("364", NumberStyles.Integer)).ToString("X");
-                    string slot19Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("368", NumberStyles.Integer)).ToString("X");
-                    string slot19Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("376", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot19Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot19Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot19Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot19Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot19Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot19Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot19Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot19Amount, "int", (MemLib.ReadUInt(slot19Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot19Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot19Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot19Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot19"))
-                            {
-                                ExportPlayerItems.Add("itemSlot19-ID", MemLib.ReadInt(slot19Item));
-                                ExportPlayerItems.Add("itemSlot19-Amount", MemLib.ReadInt(slot19Amount));
-                                ExportPlayerItems.Add("itemSlot19-Variation", MemLib.ReadInt(slot19Variation));
-                                ExportPlayerItems.Add("itemSlot19-Skillset", MemLib.ReadInt(slot19Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot19Item);
-                            variation = MemLib.ReadInt(slot19Variation);
-                            skillset = MemLib.ReadInt(slot19Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot19_PictureBox.Image = null;
-                            }
-                            else if (Slot19_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot19_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot19_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot19_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot19_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot19_PictureBox.Image = Resources.UnknownItem;
-                                        Slot19_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 19 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot19Amount) + " | Variation: " + (MemLib.ReadInt(slot19Variation)) + " | Skillset: " + (MemLib.ReadInt(slot19Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 19 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot19Amount) + " | Variation: " + (MemLib.ReadInt(slot19Variation)) + " | Skillset: " + (MemLib.ReadInt(slot19Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot19_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot19Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot19_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot19Item);
-                        infoAmount = MemLib.ReadInt(slot19Amount);
-                        infoVariant = MemLib.ReadInt(slot19Variation);
-                        infoSkillset = MemLib.ReadInt(slot19Skillset);
-                    }
-                }
-                if (itemSlot == 20 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot20Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("380", NumberStyles.Integer)).ToString("X");
-                    string slot20Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("384", NumberStyles.Integer)).ToString("X");
-                    string slot20Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("388", NumberStyles.Integer)).ToString("X");
-                    string slot20Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("396", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot20Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot20Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot20Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot20Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot20Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot20Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot20Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot20Amount, "int", (MemLib.ReadUInt(slot20Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot20Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot20Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot20Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot20"))
-                            {
-                                ExportPlayerItems.Add("itemSlot20-ID", MemLib.ReadInt(slot20Item));
-                                ExportPlayerItems.Add("itemSlot20-Amount", MemLib.ReadInt(slot20Amount));
-                                ExportPlayerItems.Add("itemSlot20-Variation", MemLib.ReadInt(slot20Variation));
-                                ExportPlayerItems.Add("itemSlot20-Skillset", MemLib.ReadInt(slot20Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot20Item);
-                            variation = MemLib.ReadInt(slot20Variation);
-                            skillset = MemLib.ReadInt(slot20Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot20_PictureBox.Image = null;
-                            }
-                            else if (Slot20_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot20_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot20_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot20_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot20_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot20_PictureBox.Image = Resources.UnknownItem;
-                                        Slot20_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 20 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot20Amount) + " | Variation: " + (MemLib.ReadInt(slot20Variation)) + " | Skillset: " + (MemLib.ReadInt(slot20Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 20 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot20Amount) + " | Variation: " + (MemLib.ReadInt(slot20Variation)) + " | Skillset: " + (MemLib.ReadInt(slot20Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot20_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot20Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot20_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot20Item);
-                        infoAmount = MemLib.ReadInt(slot20Amount);
-                        infoVariant = MemLib.ReadInt(slot20Variation);
-                        infoSkillset = MemLib.ReadInt(slot20Skillset);
-                    }
-                }
-                if (itemSlot == 21 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot21Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("400", NumberStyles.Integer)).ToString("X");
-                    string slot21Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("404", NumberStyles.Integer)).ToString("X");
-                    string slot21Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("408", NumberStyles.Integer)).ToString("X");
-                    string slot21Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("416", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot21Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot21Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot21Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot21Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot21Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot21Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot21Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot21Amount, "int", (MemLib.ReadUInt(slot21Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot21Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot21Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot21Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot21"))
-                            {
-                                ExportPlayerItems.Add("itemSlot21-ID", MemLib.ReadInt(slot21Item));
-                                ExportPlayerItems.Add("itemSlot21-Amount", MemLib.ReadInt(slot21Amount));
-                                ExportPlayerItems.Add("itemSlot21-Variation", MemLib.ReadInt(slot21Variation));
-                                ExportPlayerItems.Add("itemSlot21-Skillset", MemLib.ReadInt(slot21Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot21Item);
-                            variation = MemLib.ReadInt(slot21Variation);
-                            skillset = MemLib.ReadInt(slot21Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot21_PictureBox.Image = null;
-                            }
-                            else if (Slot21_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot21_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot21_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot21_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot21_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot21_PictureBox.Image = Resources.UnknownItem;
-                                        Slot21_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 21 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot21Amount) + " | Variation: " + (MemLib.ReadInt(slot21Variation)) + " | Skillset: " + (MemLib.ReadInt(slot21Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 21 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot21Amount) + " | Variation: " + (MemLib.ReadInt(slot21Variation)) + " | Skillset: " + (MemLib.ReadInt(slot21Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot21_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot21Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot21_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot21Item);
-                        infoAmount = MemLib.ReadInt(slot21Amount);
-                        infoVariant = MemLib.ReadInt(slot21Variation);
-                        infoSkillset = MemLib.ReadInt(slot21Skillset);
-                    }
-                }
-                if (itemSlot == 22 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot22Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("420", NumberStyles.Integer)).ToString("X");
-                    string slot22Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("424", NumberStyles.Integer)).ToString("X");
-                    string slot22Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("428", NumberStyles.Integer)).ToString("X");
-                    string slot22Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("436", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot22Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot22Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot22Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot22Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot22Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot22Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot22Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot22Amount, "int", (MemLib.ReadUInt(slot22Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot22Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot22Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot22Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot22"))
-                            {
-                                ExportPlayerItems.Add("itemSlot22-ID", MemLib.ReadInt(slot22Item));
-                                ExportPlayerItems.Add("itemSlot22-Amount", MemLib.ReadInt(slot22Amount));
-                                ExportPlayerItems.Add("itemSlot22-Variation", MemLib.ReadInt(slot22Variation));
-                                ExportPlayerItems.Add("itemSlot22-Skillset", MemLib.ReadInt(slot22Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot22Item);
-                            variation = MemLib.ReadInt(slot22Variation);
-                            skillset = MemLib.ReadInt(slot22Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot22_PictureBox.Image = null;
-                            }
-                            else if (Slot22_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot22_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot22_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot22_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot22_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot22_PictureBox.Image = Resources.UnknownItem;
-                                        Slot22_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 22 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot22Amount) + " | Variation: " + (MemLib.ReadInt(slot22Variation)) + " | Skillset: " + (MemLib.ReadInt(slot22Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 22 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot22Amount) + " | Variation: " + (MemLib.ReadInt(slot22Variation)) + " | Skillset: " + (MemLib.ReadInt(slot22Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot22_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot22Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot22_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot22Item);
-                        infoAmount = MemLib.ReadInt(slot22Amount);
-                        infoVariant = MemLib.ReadInt(slot22Variation);
-                        infoSkillset = MemLib.ReadInt(slot22Skillset);
-                    }
-                }
-                if (itemSlot == 23 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot23Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("440", NumberStyles.Integer)).ToString("X");
-                    string slot23Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("444", NumberStyles.Integer)).ToString("X");
-                    string slot23Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("448", NumberStyles.Integer)).ToString("X");
-                    string slot23Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("456", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot23Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot23Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot23Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot23Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot23Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot23Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot23Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot23Amount, "int", (MemLib.ReadUInt(slot23Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot23Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot23Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot23Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot23"))
-                            {
-                                ExportPlayerItems.Add("itemSlot23-ID", MemLib.ReadInt(slot23Item));
-                                ExportPlayerItems.Add("itemSlot23-Amount", MemLib.ReadInt(slot23Amount));
-                                ExportPlayerItems.Add("itemSlot23-Variation", MemLib.ReadInt(slot23Variation));
-                                ExportPlayerItems.Add("itemSlot23-Skillset", MemLib.ReadInt(slot23Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot23Item);
-                            variation = MemLib.ReadInt(slot23Variation);
-                            skillset = MemLib.ReadInt(slot23Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot23_PictureBox.Image = null;
-                            }
-                            else if (Slot23_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot23_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot23_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot23_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot23_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot23_PictureBox.Image = Resources.UnknownItem;
-                                        Slot23_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 23 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot23Amount) + " | Variation: " + (MemLib.ReadInt(slot23Variation)) + " | Skillset: " + (MemLib.ReadInt(slot23Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 23 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot23Amount) + " | Variation: " + (MemLib.ReadInt(slot23Variation)) + " | Skillset: " + (MemLib.ReadInt(slot23Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot23_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot23Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot23_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot23Item);
-                        infoAmount = MemLib.ReadInt(slot23Amount);
-                        infoVariant = MemLib.ReadInt(slot23Variation);
-                        infoSkillset = MemLib.ReadInt(slot23Skillset);
-                    }
-                }
-                if (itemSlot == 24 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot24Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("460", NumberStyles.Integer)).ToString("X");
-                    string slot24Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("464", NumberStyles.Integer)).ToString("X");
-                    string slot24Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("468", NumberStyles.Integer)).ToString("X");
-                    string slot24Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("476", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot24Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot24Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot24Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot24Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot24Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot24Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot24Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot24Amount, "int", (MemLib.ReadUInt(slot24Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot24Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot24Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot24Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot24"))
-                            {
-                                ExportPlayerItems.Add("itemSlot24-ID", MemLib.ReadInt(slot24Item));
-                                ExportPlayerItems.Add("itemSlot24-Amount", MemLib.ReadInt(slot24Amount));
-                                ExportPlayerItems.Add("itemSlot24-Variation", MemLib.ReadInt(slot24Variation));
-                                ExportPlayerItems.Add("itemSlot24-Skillset", MemLib.ReadInt(slot24Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot24Item);
-                            variation = MemLib.ReadInt(slot24Variation);
-                            skillset = MemLib.ReadInt(slot24Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot24_PictureBox.Image = null;
-                            }
-                            else if (Slot24_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot24_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot24_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot24_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot24_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot24_PictureBox.Image = Resources.UnknownItem;
-                                        Slot24_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 24 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot24Amount) + " | Variation: " + (MemLib.ReadInt(slot24Variation)) + " | Skillset: " + (MemLib.ReadInt(slot24Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 24 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot24Amount) + " | Variation: " + (MemLib.ReadInt(slot24Variation)) + " | Skillset: " + (MemLib.ReadInt(slot24Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot24_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot24Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot24_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot24Item);
-                        infoAmount = MemLib.ReadInt(slot24Amount);
-                        infoVariant = MemLib.ReadInt(slot24Variation);
-                        infoSkillset = MemLib.ReadInt(slot24Skillset);
-                    }
-                }
-                if (itemSlot == 25 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot25Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("480", NumberStyles.Integer)).ToString("X");
-                    string slot25Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("484", NumberStyles.Integer)).ToString("X");
-                    string slot25Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("488", NumberStyles.Integer)).ToString("X");
-                    string slot25Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("496", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot25Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot25Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot25Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot25Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot25Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot25Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot25Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot25Amount, "int", (MemLib.ReadUInt(slot25Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot25Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot25Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot25Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot25"))
-                            {
-                                ExportPlayerItems.Add("itemSlot25-ID", MemLib.ReadInt(slot25Item));
-                                ExportPlayerItems.Add("itemSlot25-Amount", MemLib.ReadInt(slot25Amount));
-                                ExportPlayerItems.Add("itemSlot25-Variation", MemLib.ReadInt(slot25Variation));
-                                ExportPlayerItems.Add("itemSlot25-Skillset", MemLib.ReadInt(slot25Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot25Item);
-                            variation = MemLib.ReadInt(slot25Variation);
-                            skillset = MemLib.ReadInt(slot25Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot25_PictureBox.Image = null;
-                            }
-                            else if (Slot25_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot25_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot25_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot25_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot25_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot25_PictureBox.Image = Resources.UnknownItem;
-                                        Slot25_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 25 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot25Amount) + " | Variation: " + (MemLib.ReadInt(slot25Variation)) + " | Skillset: " + (MemLib.ReadInt(slot25Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 25 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot25Amount) + " | Variation: " + (MemLib.ReadInt(slot25Variation)) + " | Skillset: " + (MemLib.ReadInt(slot25Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot25_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot25Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot25_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot25Item);
-                        infoAmount = MemLib.ReadInt(slot25Amount);
-                        infoVariant = MemLib.ReadInt(slot25Variation);
-                        infoSkillset = MemLib.ReadInt(slot25Skillset);
-                    }
-                }
-                if (itemSlot == 26 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot26Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("500", NumberStyles.Integer)).ToString("X");
-                    string slot26Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("504", NumberStyles.Integer)).ToString("X");
-                    string slot26Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("508", NumberStyles.Integer)).ToString("X");
-                    string slot26Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("516", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot26Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot26Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot26Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot26Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot26Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot26Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot26Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot26Amount, "int", (MemLib.ReadUInt(slot26Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot26Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot26Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot26Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot26"))
-                            {
-                                ExportPlayerItems.Add("itemSlot26-ID", MemLib.ReadInt(slot26Item));
-                                ExportPlayerItems.Add("itemSlot26-Amount", MemLib.ReadInt(slot26Amount));
-                                ExportPlayerItems.Add("itemSlot26-Variation", MemLib.ReadInt(slot26Variation));
-                                ExportPlayerItems.Add("itemSlot26-Skillset", MemLib.ReadInt(slot26Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot26Item);
-                            variation = MemLib.ReadInt(slot26Variation);
-                            skillset = MemLib.ReadInt(slot26Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot26_PictureBox.Image = null;
-                            }
-                            else if (Slot26_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot26_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot26_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot26_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot26_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot26_PictureBox.Image = Resources.UnknownItem;
-                                        Slot26_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 26 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot26Amount) + " | Variation: " + (MemLib.ReadInt(slot26Variation)) + " | Skillset: " + (MemLib.ReadInt(slot26Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 26 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot26Amount) + " | Variation: " + (MemLib.ReadInt(slot26Variation)) + " | Skillset: " + (MemLib.ReadInt(slot26Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot26_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot26Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot26_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot26Item);
-                        infoAmount = MemLib.ReadInt(slot26Amount);
-                        infoVariant = MemLib.ReadInt(slot26Variation);
-                        infoSkillset = MemLib.ReadInt(slot26Skillset);
-                    }
-                }
-                if (itemSlot == 27 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot27Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("520", NumberStyles.Integer)).ToString("X");
-                    string slot27Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("524", NumberStyles.Integer)).ToString("X");
-                    string slot27Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("528", NumberStyles.Integer)).ToString("X");
-                    string slot27Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("536", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot27Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot27Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot27Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot27Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot27Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot27Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot27Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot27Amount, "int", (MemLib.ReadUInt(slot27Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot27Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot27Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot27Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot27"))
-                            {
-                                ExportPlayerItems.Add("itemSlot27-ID", MemLib.ReadInt(slot27Item));
-                                ExportPlayerItems.Add("itemSlot27-Amount", MemLib.ReadInt(slot27Amount));
-                                ExportPlayerItems.Add("itemSlot27-Variation", MemLib.ReadInt(slot27Variation));
-                                ExportPlayerItems.Add("itemSlot27-Skillset", MemLib.ReadInt(slot27Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot27Item);
-                            variation = MemLib.ReadInt(slot27Variation);
-                            skillset = MemLib.ReadInt(slot27Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot27_PictureBox.Image = null;
-                            }
-                            else if (Slot27_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot27_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot27_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot27_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot27_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot27_PictureBox.Image = Resources.UnknownItem;
-                                        Slot27_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 27 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot27Amount) + " | Variation: " + (MemLib.ReadInt(slot27Variation)) + " | Skillset: " + (MemLib.ReadInt(slot27Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 27 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot27Amount) + " | Variation: " + (MemLib.ReadInt(slot27Variation)) + " | Skillset: " + (MemLib.ReadInt(slot27Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot27_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot27Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot27_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot27Item);
-                        infoAmount = MemLib.ReadInt(slot27Amount);
-                        infoVariant = MemLib.ReadInt(slot27Variation);
-                        infoSkillset = MemLib.ReadInt(slot27Skillset);
-                    }
-                }
-                if (itemSlot == 28 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot28Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("540", NumberStyles.Integer)).ToString("X");
-                    string slot28Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("544", NumberStyles.Integer)).ToString("X");
-                    string slot28Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("548", NumberStyles.Integer)).ToString("X");
-                    string slot28Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("556", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot28Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot28Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot28Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot28Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot28Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot28Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot28Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot28Amount, "int", (MemLib.ReadUInt(slot28Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot28Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot28Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot28Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot28"))
-                            {
-                                ExportPlayerItems.Add("itemSlot28-ID", MemLib.ReadInt(slot28Item));
-                                ExportPlayerItems.Add("itemSlot28-Amount", MemLib.ReadInt(slot28Amount));
-                                ExportPlayerItems.Add("itemSlot28-Variation", MemLib.ReadInt(slot28Variation));
-                                ExportPlayerItems.Add("itemSlot28-Skillset", MemLib.ReadInt(slot28Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot28Item);
-                            variation = MemLib.ReadInt(slot28Variation);
-                            skillset = MemLib.ReadInt(slot28Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot28_PictureBox.Image = null;
-                            }
-                            else if (Slot28_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot28_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot28_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot28_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot28_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot28_PictureBox.Image = Resources.UnknownItem;
-                                        Slot28_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 28 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot28Amount) + " | Variation: " + (MemLib.ReadInt(slot28Variation)) + " | Skillset: " + (MemLib.ReadInt(slot28Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 28 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot28Amount) + " | Variation: " + (MemLib.ReadInt(slot28Variation)) + " | Skillset: " + (MemLib.ReadInt(slot28Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot28_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot28Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot28_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot28Item);
-                        infoAmount = MemLib.ReadInt(slot28Amount);
-                        infoVariant = MemLib.ReadInt(slot28Variation);
-                        infoSkillset = MemLib.ReadInt(slot28Skillset);
-                    }
-                }
-                if (itemSlot == 29 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot29Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("560", NumberStyles.Integer)).ToString("X");
-                    string slot29Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("564", NumberStyles.Integer)).ToString("X");
-                    string slot29Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("568", NumberStyles.Integer)).ToString("X");
-                    string slot29Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("576", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot29Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot29Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot29Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot29Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot29Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot29Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot29Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot29Amount, "int", (MemLib.ReadUInt(slot29Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot29Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot29Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot29Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot29"))
-                            {
-                                ExportPlayerItems.Add("itemSlot29-ID", MemLib.ReadInt(slot29Item));
-                                ExportPlayerItems.Add("itemSlot29-Amount", MemLib.ReadInt(slot29Amount));
-                                ExportPlayerItems.Add("itemSlot29-Variation", MemLib.ReadInt(slot29Variation));
-                                ExportPlayerItems.Add("itemSlot29-Skillset", MemLib.ReadInt(slot29Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot29Item);
-                            variation = MemLib.ReadInt(slot29Variation);
-                            skillset = MemLib.ReadInt(slot29Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot29_PictureBox.Image = null;
-                            }
-                            else if (Slot29_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot29_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot29_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot29_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot29_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot29_PictureBox.Image = Resources.UnknownItem;
-                                        Slot29_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 29 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot29Amount) + " | Variation: " + (MemLib.ReadInt(slot29Variation)) + " | Skillset: " + (MemLib.ReadInt(slot29Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 29 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot29Amount) + " | Variation: " + (MemLib.ReadInt(slot29Variation)) + " | Skillset: " + (MemLib.ReadInt(slot29Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot29_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot29Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot29_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot29Item);
-                        infoAmount = MemLib.ReadInt(slot29Amount);
-                        infoVariant = MemLib.ReadInt(slot29Variation);
-                        infoSkillset = MemLib.ReadInt(slot29Skillset);
-                    }
-                }
-                if (itemSlot == 30 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot30Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("580", NumberStyles.Integer)).ToString("X");
-                    string slot30Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("584", NumberStyles.Integer)).ToString("X");
-                    string slot30Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("588", NumberStyles.Integer)).ToString("X");
-                    string slot30Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("596", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot30Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot30Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot30Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot30Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot30Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot30Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot30Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot30Amount, "int", (MemLib.ReadUInt(slot30Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot30Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot30Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot30Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot30"))
-                            {
-                                ExportPlayerItems.Add("itemSlot30-ID", MemLib.ReadInt(slot30Item));
-                                ExportPlayerItems.Add("itemSlot30-Amount", MemLib.ReadInt(slot30Amount));
-                                ExportPlayerItems.Add("itemSlot30-Variation", MemLib.ReadInt(slot30Variation));
-                                ExportPlayerItems.Add("itemSlot30-Skillset", MemLib.ReadInt(slot30Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot30Item);
-                            variation = MemLib.ReadInt(slot30Variation);
-                            skillset = MemLib.ReadInt(slot30Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot30_PictureBox.Image = null;
-                            }
-                            else if (Slot30_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot30_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot30_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot30_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot30_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot30_PictureBox.Image = Resources.UnknownItem;
-                                        Slot30_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 30 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot30Amount) + " | Variation: " + (MemLib.ReadInt(slot30Variation)) + " | Skillset: " + (MemLib.ReadInt(slot30Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 30 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot30Amount) + " | Variation: " + (MemLib.ReadInt(slot30Variation)) + " | Skillset: " + (MemLib.ReadInt(slot30Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot30_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot30Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot30_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot30Item);
-                        infoAmount = MemLib.ReadInt(slot30Amount);
-                        infoVariant = MemLib.ReadInt(slot30Variation);
-                        infoSkillset = MemLib.ReadInt(slot30Skillset);
-                    }
-                }
-                if (itemSlot == 31 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot31Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("600", NumberStyles.Integer)).ToString("X");
-                    string slot31Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("604", NumberStyles.Integer)).ToString("X");
-                    string slot31Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("608", NumberStyles.Integer)).ToString("X");
-                    string slot31Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("616", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot31Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot31Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot31Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot31Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot31Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot31Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot31Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot31Amount, "int", (MemLib.ReadUInt(slot31Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot31Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot31Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot31Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot31"))
-                            {
-                                ExportPlayerItems.Add("itemSlot31-ID", MemLib.ReadInt(slot31Item));
-                                ExportPlayerItems.Add("itemSlot31-Amount", MemLib.ReadInt(slot31Amount));
-                                ExportPlayerItems.Add("itemSlot31-Variation", MemLib.ReadInt(slot31Variation));
-                                ExportPlayerItems.Add("itemSlot31-Skillset", MemLib.ReadInt(slot31Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot31Item);
-                            variation = MemLib.ReadInt(slot31Variation);
-                            skillset = MemLib.ReadInt(slot31Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot31_PictureBox.Image = null;
-                            }
-                            else if (Slot31_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot31_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot31_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot31_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot31_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot31_PictureBox.Image = Resources.UnknownItem;
-                                        Slot31_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 31 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot31Amount) + " | Variation: " + (MemLib.ReadInt(slot31Variation)) + " | Skillset: " + (MemLib.ReadInt(slot31Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 31 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot31Amount) + " | Variation: " + (MemLib.ReadInt(slot31Variation)) + " | Skillset: " + (MemLib.ReadInt(slot31Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot31_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot31Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot31_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot31Item);
-                        infoAmount = MemLib.ReadInt(slot31Amount);
-                        infoVariant = MemLib.ReadInt(slot31Variation);
-                        infoSkillset = MemLib.ReadInt(slot31Skillset);
-                    }
-                }
-                if (itemSlot == 32 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot32Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("620", NumberStyles.Integer)).ToString("X");
-                    string slot32Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("624", NumberStyles.Integer)).ToString("X");
-                    string slot32Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("628", NumberStyles.Integer)).ToString("X");
-                    string slot32Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("636", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot32Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot32Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot32Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot32Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot32Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot32Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot32Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot32Amount, "int", (MemLib.ReadUInt(slot32Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot32Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot32Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot32Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot32"))
-                            {
-                                ExportPlayerItems.Add("itemSlot32-ID", MemLib.ReadInt(slot32Item));
-                                ExportPlayerItems.Add("itemSlot32-Amount", MemLib.ReadInt(slot32Amount));
-                                ExportPlayerItems.Add("itemSlot32-Variation", MemLib.ReadInt(slot32Variation));
-                                ExportPlayerItems.Add("itemSlot32-Skillset", MemLib.ReadInt(slot32Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot32Item);
-                            variation = MemLib.ReadInt(slot32Variation);
-                            skillset = MemLib.ReadInt(slot32Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot32_PictureBox.Image = null;
-                            }
-                            else if (Slot32_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot32_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot32_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot32_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot32_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot32_PictureBox.Image = Resources.UnknownItem;
-                                        Slot32_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 32 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot32Amount) + " | Variation: " + (MemLib.ReadInt(slot32Variation)) + " | Skillset: " + (MemLib.ReadInt(slot32Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 32 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot32Amount) + " | Variation: " + (MemLib.ReadInt(slot32Variation)) + " | Skillset: " + (MemLib.ReadInt(slot32Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot32_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot32Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot32_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot32Item);
-                        infoAmount = MemLib.ReadInt(slot32Amount);
-                        infoVariant = MemLib.ReadInt(slot32Variation);
-                        infoSkillset = MemLib.ReadInt(slot32Skillset);
-                    }
-                }
-                if (itemSlot == 33 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot33Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("640", NumberStyles.Integer)).ToString("X");
-                    string slot33Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("644", NumberStyles.Integer)).ToString("X");
-                    string slot33Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("648", NumberStyles.Integer)).ToString("X");
-                    string slot33Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("656", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot33Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot33Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot33Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot33Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot33Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot33Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot33Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot33Amount, "int", (MemLib.ReadUInt(slot33Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot33Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot33Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot33Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot33"))
-                            {
-                                ExportPlayerItems.Add("itemSlot33-ID", MemLib.ReadInt(slot33Item));
-                                ExportPlayerItems.Add("itemSlot33-Amount", MemLib.ReadInt(slot33Amount));
-                                ExportPlayerItems.Add("itemSlot33-Variation", MemLib.ReadInt(slot33Variation));
-                                ExportPlayerItems.Add("itemSlot33-Skillset", MemLib.ReadInt(slot33Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot33Item);
-                            variation = MemLib.ReadInt(slot33Variation);
-                            skillset = MemLib.ReadInt(slot33Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot33_PictureBox.Image = null;
-                            }
-                            else if (Slot33_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot33_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot33_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot33_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot33_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot33_PictureBox.Image = Resources.UnknownItem;
-                                        Slot33_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 33 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot33Amount) + " | Variation: " + (MemLib.ReadInt(slot33Variation)) + " | Skillset: " + (MemLib.ReadInt(slot33Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 33 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot33Amount) + " | Variation: " + (MemLib.ReadInt(slot33Variation)) + " | Skillset: " + (MemLib.ReadInt(slot33Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot33_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot33Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot33_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot33Item);
-                        infoAmount = MemLib.ReadInt(slot33Amount);
-                        infoVariant = MemLib.ReadInt(slot33Variation);
-                        infoSkillset = MemLib.ReadInt(slot33Skillset);
-                    }
-                }
-                if (itemSlot == 34 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot34Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("660", NumberStyles.Integer)).ToString("X");
-                    string slot34Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("664", NumberStyles.Integer)).ToString("X");
-                    string slot34Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("668", NumberStyles.Integer)).ToString("X");
-                    string slot34Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("676", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot34Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot34Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot34Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot34Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot34Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot34Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot34Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot34Amount, "int", (MemLib.ReadUInt(slot34Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot34Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot34Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot34Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot34"))
-                            {
-                                ExportPlayerItems.Add("itemSlot34-ID", MemLib.ReadInt(slot34Item));
-                                ExportPlayerItems.Add("itemSlot34-Amount", MemLib.ReadInt(slot34Amount));
-                                ExportPlayerItems.Add("itemSlot34-Variation", MemLib.ReadInt(slot34Variation));
-                                ExportPlayerItems.Add("itemSlot34-Skillset", MemLib.ReadInt(slot34Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot34Item);
-                            variation = MemLib.ReadInt(slot34Variation);
-                            skillset = MemLib.ReadInt(slot34Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot34_PictureBox.Image = null;
-                            }
-                            else if (Slot34_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot34_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot34_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot34_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot34_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot34_PictureBox.Image = Resources.UnknownItem;
-                                        Slot34_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 34 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot34Amount) + " | Variation: " + (MemLib.ReadInt(slot34Variation)) + " | Skillset: " + (MemLib.ReadInt(slot34Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 34 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot34Amount) + " | Variation: " + (MemLib.ReadInt(slot34Variation)) + " | Skillset: " + (MemLib.ReadInt(slot34Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot34_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot34Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot34_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot34Item);
-                        infoAmount = MemLib.ReadInt(slot34Amount);
-                        infoVariant = MemLib.ReadInt(slot34Variation);
-                        infoSkillset = MemLib.ReadInt(slot34Skillset);
-                    }
-                }
-                if (itemSlot == 35 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot35Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("680", NumberStyles.Integer)).ToString("X");
-                    string slot35Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("684", NumberStyles.Integer)).ToString("X");
-                    string slot35Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("688", NumberStyles.Integer)).ToString("X");
-                    string slot35Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("696", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot35Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot35Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot35Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot35Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot35Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot35Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot35Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot35Amount, "int", (MemLib.ReadUInt(slot35Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot35Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot35Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot35Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot35"))
-                            {
-                                ExportPlayerItems.Add("itemSlot35-ID", MemLib.ReadInt(slot35Item));
-                                ExportPlayerItems.Add("itemSlot35-Amount", MemLib.ReadInt(slot35Amount));
-                                ExportPlayerItems.Add("itemSlot35-Variation", MemLib.ReadInt(slot35Variation));
-                                ExportPlayerItems.Add("itemSlot35-Skillset", MemLib.ReadInt(slot35Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot35Item);
-                            variation = MemLib.ReadInt(slot35Variation);
-                            skillset = MemLib.ReadInt(slot35Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot35_PictureBox.Image = null;
-                            }
-                            else if (Slot35_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot35_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot35_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot35_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot35_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot35_PictureBox.Image = Resources.UnknownItem;
-                                        Slot35_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 35 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot35Amount) + " | Variation: " + (MemLib.ReadInt(slot35Variation)) + " | Skillset: " + (MemLib.ReadInt(slot35Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 35 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot35Amount) + " | Variation: " + (MemLib.ReadInt(slot35Variation)) + " | Skillset: " + (MemLib.ReadInt(slot35Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot35_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot35Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot35_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot35Item);
-                        infoAmount = MemLib.ReadInt(slot35Amount);
-                        infoVariant = MemLib.ReadInt(slot35Variation);
-                        infoSkillset = MemLib.ReadInt(slot35Skillset);
-                    }
-                }
-                if (itemSlot == 36 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot36Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("700", NumberStyles.Integer)).ToString("X");
-                    string slot36Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("704", NumberStyles.Integer)).ToString("X");
-                    string slot36Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("708", NumberStyles.Integer)).ToString("X");
-                    string slot36Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("716", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot36Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot36Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot36Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot36Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot36Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot36Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot36Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot36Amount, "int", (MemLib.ReadUInt(slot36Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot36Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot36Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot36Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot36"))
-                            {
-                                ExportPlayerItems.Add("itemSlot36-ID", MemLib.ReadInt(slot36Item));
-                                ExportPlayerItems.Add("itemSlot36-Amount", MemLib.ReadInt(slot36Amount));
-                                ExportPlayerItems.Add("itemSlot36-Variation", MemLib.ReadInt(slot36Variation));
-                                ExportPlayerItems.Add("itemSlot36-Skillset", MemLib.ReadInt(slot36Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot36Item);
-                            variation = MemLib.ReadInt(slot36Variation);
-                            skillset = MemLib.ReadInt(slot36Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot36_PictureBox.Image = null;
-                            }
-                            else if (Slot36_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot36_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot36_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot36_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot36_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot36_PictureBox.Image = Resources.UnknownItem;
-                                        Slot36_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 36 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot36Amount) + " | Variation: " + (MemLib.ReadInt(slot36Variation)) + " | Skillset: " + (MemLib.ReadInt(slot36Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 36 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot36Amount) + " | Variation: " + (MemLib.ReadInt(slot36Variation)) + " | Skillset: " + (MemLib.ReadInt(slot36Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot36_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot36Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot36_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot36Item);
-                        infoAmount = MemLib.ReadInt(slot36Amount);
-                        infoVariant = MemLib.ReadInt(slot36Variation);
-                        infoSkillset = MemLib.ReadInt(slot36Skillset);
-                    }
-                }
-                if (itemSlot == 37 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot37Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("720", NumberStyles.Integer)).ToString("X");
-                    string slot37Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("724", NumberStyles.Integer)).ToString("X");
-                    string slot37Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("728", NumberStyles.Integer)).ToString("X");
-                    string slot37Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("736", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot37Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot37Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot37Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot37Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot37Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot37Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot37Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot37Amount, "int", (MemLib.ReadUInt(slot37Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot37Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot37Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot37Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot37"))
-                            {
-                                ExportPlayerItems.Add("itemSlot37-ID", MemLib.ReadInt(slot37Item));
-                                ExportPlayerItems.Add("itemSlot37-Amount", MemLib.ReadInt(slot37Amount));
-                                ExportPlayerItems.Add("itemSlot37-Variation", MemLib.ReadInt(slot37Variation));
-                                ExportPlayerItems.Add("itemSlot37-Skillset", MemLib.ReadInt(slot37Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot37Item);
-                            variation = MemLib.ReadInt(slot37Variation);
-                            skillset = MemLib.ReadInt(slot37Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot37_PictureBox.Image = null;
-                            }
-                            else if (Slot37_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot37_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot37_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot37_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot37_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot37_PictureBox.Image = Resources.UnknownItem;
-                                        Slot37_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 37 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot37Amount) + " | Variation: " + (MemLib.ReadInt(slot37Variation)) + " | Skillset: " + (MemLib.ReadInt(slot37Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 37 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot37Amount) + " | Variation: " + (MemLib.ReadInt(slot37Variation)) + " | Skillset: " + (MemLib.ReadInt(slot37Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot37_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot37Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot37_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot37Item);
-                        infoAmount = MemLib.ReadInt(slot37Amount);
-                        infoVariant = MemLib.ReadInt(slot37Variation);
-                        infoSkillset = MemLib.ReadInt(slot37Skillset);
-                    }
-                }
-                if (itemSlot == 38 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot38Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("740", NumberStyles.Integer)).ToString("X");
-                    string slot38Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("744", NumberStyles.Integer)).ToString("X");
-                    string slot38Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("748", NumberStyles.Integer)).ToString("X");
-                    string slot38Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("756", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot38Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot38Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot38Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot38Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot38Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot38Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot38Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot38Amount, "int", (MemLib.ReadUInt(slot38Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot38Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot38Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot38Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot38"))
-                            {
-                                ExportPlayerItems.Add("itemSlot38-ID", MemLib.ReadInt(slot38Item));
-                                ExportPlayerItems.Add("itemSlot38-Amount", MemLib.ReadInt(slot38Amount));
-                                ExportPlayerItems.Add("itemSlot38-Variation", MemLib.ReadInt(slot38Variation));
-                                ExportPlayerItems.Add("itemSlot38-Skillset", MemLib.ReadInt(slot38Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot38Item);
-                            variation = MemLib.ReadInt(slot38Variation);
-                            skillset = MemLib.ReadInt(slot38Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot38_PictureBox.Image = null;
-                            }
-                            else if (Slot38_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot38_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot38_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot38_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot38_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot38_PictureBox.Image = Resources.UnknownItem;
-                                        Slot38_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 38 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot38Amount) + " | Variation: " + (MemLib.ReadInt(slot38Variation)) + " | Skillset: " + (MemLib.ReadInt(slot38Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 38 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot38Amount) + " | Variation: " + (MemLib.ReadInt(slot38Variation)) + " | Skillset: " + (MemLib.ReadInt(slot38Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot38_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot38Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot38_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot38Item);
-                        infoAmount = MemLib.ReadInt(slot38Amount);
-                        infoVariant = MemLib.ReadInt(slot38Variation);
-                        infoSkillset = MemLib.ReadInt(slot38Skillset);
-                    }
-                }
-                if (itemSlot == 39 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot39Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("760", NumberStyles.Integer)).ToString("X");
-                    string slot39Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("764", NumberStyles.Integer)).ToString("X");
-                    string slot39Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("768", NumberStyles.Integer)).ToString("X");
-                    string slot39Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("776", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot39Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot39Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot39Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot39Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot39Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot39Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot39Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot39Amount, "int", (MemLib.ReadUInt(slot39Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot39Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot39Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot39Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot39"))
-                            {
-                                ExportPlayerItems.Add("itemSlot39-ID", MemLib.ReadInt(slot39Item));
-                                ExportPlayerItems.Add("itemSlot39-Amount", MemLib.ReadInt(slot39Amount));
-                                ExportPlayerItems.Add("itemSlot39-Variation", MemLib.ReadInt(slot39Variation));
-                                ExportPlayerItems.Add("itemSlot39-Skillset", MemLib.ReadInt(slot39Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot39Item);
-                            variation = MemLib.ReadInt(slot39Variation);
-                            skillset = MemLib.ReadInt(slot39Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot39_PictureBox.Image = null;
-                            }
-                            else if (Slot39_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot39_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot39_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot39_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot39_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot39_PictureBox.Image = Resources.UnknownItem;
-                                        Slot39_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 39 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot39Amount) + " | Variation: " + (MemLib.ReadInt(slot39Variation)) + " | Skillset: " + (MemLib.ReadInt(slot39Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 39 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot39Amount) + " | Variation: " + (MemLib.ReadInt(slot39Variation)) + " | Skillset: " + (MemLib.ReadInt(slot39Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot39_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot39Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot39_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot39Item);
-                        infoAmount = MemLib.ReadInt(slot39Amount);
-                        infoVariant = MemLib.ReadInt(slot39Variation);
-                        infoSkillset = MemLib.ReadInt(slot39Skillset);
-                    }
-                }
-                if (itemSlot == 40 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot40Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("780", NumberStyles.Integer)).ToString("X");
-                    string slot40Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("784", NumberStyles.Integer)).ToString("X");
-                    string slot40Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("788", NumberStyles.Integer)).ToString("X");
-                    string slot40Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("796", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot40Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot40Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot40Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot40Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot40Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot40Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot40Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot40Amount, "int", (MemLib.ReadUInt(slot40Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot40Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot40Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot40Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot40"))
-                            {
-                                ExportPlayerItems.Add("itemSlot40-ID", MemLib.ReadInt(slot40Item));
-                                ExportPlayerItems.Add("itemSlot40-Amount", MemLib.ReadInt(slot40Amount));
-                                ExportPlayerItems.Add("itemSlot40-Variation", MemLib.ReadInt(slot40Variation));
-                                ExportPlayerItems.Add("itemSlot40-Skillset", MemLib.ReadInt(slot40Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot40Item);
-                            variation = MemLib.ReadInt(slot40Variation);
-                            skillset = MemLib.ReadInt(slot40Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot40_PictureBox.Image = null;
-                            }
-                            else if (Slot40_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot40_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot40_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot40_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot40_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot40_PictureBox.Image = Resources.UnknownItem;
-                                        Slot40_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 40 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot40Amount) + " | Variation: " + (MemLib.ReadInt(slot40Variation)) + " | Skillset: " + (MemLib.ReadInt(slot40Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 40 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot40Amount) + " | Variation: " + (MemLib.ReadInt(slot40Variation)) + " | Skillset: " + (MemLib.ReadInt(slot40Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot40_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot40Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot40_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot40Item);
-                        infoAmount = MemLib.ReadInt(slot40Amount);
-                        infoVariant = MemLib.ReadInt(slot40Variation);
-                        infoSkillset = MemLib.ReadInt(slot40Skillset);
-                    }
-                }
-                if (itemSlot == 41 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot41Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("800", NumberStyles.Integer)).ToString("X");
-                    string slot41Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("804", NumberStyles.Integer)).ToString("X");
-                    string slot41Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("808", NumberStyles.Integer)).ToString("X");
-                    string slot41Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("816", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot41Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot41Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot41Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot41Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot41Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot41Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot41Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot41Amount, "int", (MemLib.ReadUInt(slot41Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot41Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot41Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot41Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot41"))
-                            {
-                                ExportPlayerItems.Add("itemSlot41-ID", MemLib.ReadInt(slot41Item));
-                                ExportPlayerItems.Add("itemSlot41-Amount", MemLib.ReadInt(slot41Amount));
-                                ExportPlayerItems.Add("itemSlot41-Variation", MemLib.ReadInt(slot41Variation));
-                                ExportPlayerItems.Add("itemSlot41-Skillset", MemLib.ReadInt(slot41Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot41Item);
-                            variation = MemLib.ReadInt(slot41Variation);
-                            skillset = MemLib.ReadInt(slot41Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot41_PictureBox.Image = null;
-                            }
-                            else if (Slot41_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot41_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot41_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot41_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot41_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot41_PictureBox.Image = Resources.UnknownItem;
-                                        Slot41_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 41 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot41Amount) + " | Variation: " + (MemLib.ReadInt(slot41Variation)) + " | Skillset: " + (MemLib.ReadInt(slot41Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 41 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot41Amount) + " | Variation: " + (MemLib.ReadInt(slot41Variation)) + " | Skillset: " + (MemLib.ReadInt(slot41Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot41_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot41Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot41_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot41Item);
-                        infoAmount = MemLib.ReadInt(slot41Amount);
-                        infoVariant = MemLib.ReadInt(slot41Variation);
-                        infoSkillset = MemLib.ReadInt(slot41Skillset);
-                    }
-                }
-                if (itemSlot == 42 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot42Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("820", NumberStyles.Integer)).ToString("X");
-                    string slot42Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("824", NumberStyles.Integer)).ToString("X");
-                    string slot42Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("828", NumberStyles.Integer)).ToString("X");
-                    string slot42Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("836", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot42Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot42Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot42Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot42Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot42Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot42Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot42Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot42Amount, "int", (MemLib.ReadUInt(slot42Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot42Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot42Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot42Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot42"))
-                            {
-                                ExportPlayerItems.Add("itemSlot42-ID", MemLib.ReadInt(slot42Item));
-                                ExportPlayerItems.Add("itemSlot42-Amount", MemLib.ReadInt(slot42Amount));
-                                ExportPlayerItems.Add("itemSlot42-Variation", MemLib.ReadInt(slot42Variation));
-                                ExportPlayerItems.Add("itemSlot42-Skillset", MemLib.ReadInt(slot42Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot42Item);
-                            variation = MemLib.ReadInt(slot42Variation);
-                            skillset = MemLib.ReadInt(slot42Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot42_PictureBox.Image = null;
-                            }
-                            else if (Slot42_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot42_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot42_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot42_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot42_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot42_PictureBox.Image = Resources.UnknownItem;
-                                        Slot42_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 42 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot42Amount) + " | Variation: " + (MemLib.ReadInt(slot42Variation)) + " | Skillset: " + (MemLib.ReadInt(slot42Skillset)))) == false) // Check if entree exists already.
-                                        {                                                                                                                                                                                                                                                                  // {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 42 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot42Amount) + " | Variation: " + (MemLib.ReadInt(slot42Variation)) + " | Skillset: " + (MemLib.ReadInt(slot42Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot42_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot42Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot42_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot42Item);
-                        infoAmount = MemLib.ReadInt(slot42Amount);
-                        infoVariant = MemLib.ReadInt(slot42Variation);
-                        infoSkillset = MemLib.ReadInt(slot42Skillset);
-                    }
-                }
-                if (itemSlot == 43 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot43Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("840", NumberStyles.Integer)).ToString("X");
-                    string slot43Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("844", NumberStyles.Integer)).ToString("X");
-                    string slot43Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("848", NumberStyles.Integer)).ToString("X");
-                    string slot43Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("856", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot43Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot43Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot43Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot43Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot43Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot43Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot43Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot43Amount, "int", (MemLib.ReadUInt(slot43Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot43Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot43Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot43Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot43"))
-                            {
-                                ExportPlayerItems.Add("itemSlot43-ID", MemLib.ReadInt(slot43Item));
-                                ExportPlayerItems.Add("itemSlot43-Amount", MemLib.ReadInt(slot43Amount));
-                                ExportPlayerItems.Add("itemSlot43-Variation", MemLib.ReadInt(slot43Variation));
-                                ExportPlayerItems.Add("itemSlot43-Skillset", MemLib.ReadInt(slot43Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot43Item);
-                            variation = MemLib.ReadInt(slot43Variation);
-                            skillset = MemLib.ReadInt(slot43Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot43_PictureBox.Image = null;
-                            }
-                            else if (Slot43_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot43_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot43_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot43_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot43_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot43_PictureBox.Image = Resources.UnknownItem;
-                                        Slot43_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 43 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot43Amount) + " | Variation: " + (MemLib.ReadInt(slot43Variation)) + " | Skillset: " + (MemLib.ReadInt(slot43Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 43 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot43Amount) + " | Variation: " + (MemLib.ReadInt(slot43Variation)) + " | Skillset: " + (MemLib.ReadInt(slot43Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot43_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot43Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot43_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot43Item);
-                        infoAmount = MemLib.ReadInt(slot43Amount);
-                        infoVariant = MemLib.ReadInt(slot43Variation);
-                        infoSkillset = MemLib.ReadInt(slot43Skillset);
-                    }
-                }
-                if (itemSlot == 44 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot44Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("860", NumberStyles.Integer)).ToString("X");
-                    string slot44Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("864", NumberStyles.Integer)).ToString("X");
-                    string slot44Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("868", NumberStyles.Integer)).ToString("X");
-                    string slot44Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("876", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot44Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot44Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot44Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot44Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot44Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot44Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot44Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot44Amount, "int", (MemLib.ReadUInt(slot44Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot44Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot44Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot44Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot44"))
-                            {
-                                ExportPlayerItems.Add("itemSlot44-ID", MemLib.ReadInt(slot44Item));
-                                ExportPlayerItems.Add("itemSlot44-Amount", MemLib.ReadInt(slot44Amount));
-                                ExportPlayerItems.Add("itemSlot44-Variation", MemLib.ReadInt(slot44Variation));
-                                ExportPlayerItems.Add("itemSlot44-Skillset", MemLib.ReadInt(slot44Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot44Item);
-                            variation = MemLib.ReadInt(slot44Variation);
-                            skillset = MemLib.ReadInt(slot44Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot44_PictureBox.Image = null;
-                            }
-                            else if (Slot44_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot44_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot44_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot44_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot44_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot44_PictureBox.Image = Resources.UnknownItem;
-                                        Slot44_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 44 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot44Amount) + " | Variation: " + (MemLib.ReadInt(slot44Variation)) + " | Skillset: " + (MemLib.ReadInt(slot44Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 44 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot44Amount) + " | Variation: " + (MemLib.ReadInt(slot44Variation)) + " | Skillset: " + (MemLib.ReadInt(slot44Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot44_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot44Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot44_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot44Item);
-                        infoAmount = MemLib.ReadInt(slot44Amount);
-                        infoVariant = MemLib.ReadInt(slot44Variation);
-                        infoSkillset = MemLib.ReadInt(slot44Skillset);
-                    }
-                }
-                if (itemSlot == 45 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot45Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("880", NumberStyles.Integer)).ToString("X");
-                    string slot45Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("884", NumberStyles.Integer)).ToString("X");
-                    string slot45Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("888", NumberStyles.Integer)).ToString("X");
-                    string slot45Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("896", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot45Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot45Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot45Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot45Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot45Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot45Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot45Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot45Amount, "int", (MemLib.ReadUInt(slot45Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot45Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot45Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot45Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot45"))
-                            {
-                                ExportPlayerItems.Add("itemSlot45-ID", MemLib.ReadInt(slot45Item));
-                                ExportPlayerItems.Add("itemSlot45-Amount", MemLib.ReadInt(slot45Amount));
-                                ExportPlayerItems.Add("itemSlot45-Variation", MemLib.ReadInt(slot45Variation));
-                                ExportPlayerItems.Add("itemSlot45-Skillset", MemLib.ReadInt(slot45Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot45Item);
-                            variation = MemLib.ReadInt(slot45Variation);
-                            skillset = MemLib.ReadInt(slot45Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot45_PictureBox.Image = null;
-                            }
-                            else if (Slot45_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot45_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot45_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot45_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot45_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot45_PictureBox.Image = Resources.UnknownItem;
-                                        Slot45_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 45 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot45Amount) + " | Variation: " + (MemLib.ReadInt(slot45Variation)) + " | Skillset: " + (MemLib.ReadInt(slot45Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 45 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot45Amount) + " | Variation: " + (MemLib.ReadInt(slot45Variation)) + " | Skillset: " + (MemLib.ReadInt(slot45Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot45_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot45Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot45_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
+                                    catch (Exception) { } // Swallow safely.
                                 }
                             }
                         }
-                    }
 
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot45Item);
-                        infoAmount = MemLib.ReadInt(slot45Amount);
-                        infoVariant = MemLib.ReadInt(slot45Variation);
-                        infoSkillset = MemLib.ReadInt(slot45Skillset);
-                    }
-                }
-                if (itemSlot == 46 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot46Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("900", NumberStyles.Integer)).ToString("X");
-                    string slot46Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("904", NumberStyles.Integer)).ToString("X");
-                    string slot46Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("908", NumberStyles.Integer)).ToString("X");
-                    string slot46Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("916", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot46Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot46Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot46Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot46Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot46Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot46Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot46Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot46Amount, "int", (MemLib.ReadUInt(slot46Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot46Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot46Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot46Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot46"))
-                            {
-                                ExportPlayerItems.Add("itemSlot46-ID", MemLib.ReadInt(slot46Item));
-                                ExportPlayerItems.Add("itemSlot46-Amount", MemLib.ReadInt(slot46Amount));
-                                ExportPlayerItems.Add("itemSlot46-Variation", MemLib.ReadInt(slot46Variation));
-                                ExportPlayerItems.Add("itemSlot46-Skillset", MemLib.ReadInt(slot46Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot46Item);
-                            variation = MemLib.ReadInt(slot46Variation);
-                            skillset = MemLib.ReadInt(slot46Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot46_PictureBox.Image = null;
-                            }
-                            else if (Slot46_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot46_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot46_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot46_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot46_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot46_PictureBox.Image = Resources.UnknownItem;
-                                        Slot46_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 46 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot46Amount) + " | Variation: " + (MemLib.ReadInt(slot46Variation)) + " | Skillset: " + (MemLib.ReadInt(slot46Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 46 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot46Amount) + " | Variation: " + (MemLib.ReadInt(slot46Variation)) + " | Skillset: " + (MemLib.ReadInt(slot46Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot46_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot46Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot46_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot46Item);
-                        infoAmount = MemLib.ReadInt(slot46Amount);
-                        infoVariant = MemLib.ReadInt(slot46Variation);
-                        infoSkillset = MemLib.ReadInt(slot46Skillset);
-                    }
-                }
-                if (itemSlot == 47 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot47Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("920", NumberStyles.Integer)).ToString("X");
-                    string slot47Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("924", NumberStyles.Integer)).ToString("X");
-                    string slot47Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("928", NumberStyles.Integer)).ToString("X");
-                    string slot47Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("936", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot47Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot47Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot47Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot47Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot47Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot47Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot47Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot47Amount, "int", (MemLib.ReadUInt(slot47Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot47Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot47Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot47Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot47"))
-                            {
-                                ExportPlayerItems.Add("itemSlot47-ID", MemLib.ReadInt(slot47Item));
-                                ExportPlayerItems.Add("itemSlot47-Amount", MemLib.ReadInt(slot47Amount));
-                                ExportPlayerItems.Add("itemSlot47-Variation", MemLib.ReadInt(slot47Variation));
-                                ExportPlayerItems.Add("itemSlot47-Skillset", MemLib.ReadInt(slot47Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot47Item);
-                            variation = MemLib.ReadInt(slot47Variation);
-                            skillset = MemLib.ReadInt(slot47Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot47_PictureBox.Image = null;
-                            }
-                            else if (Slot47_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot47_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot47_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot47_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot47_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot47_PictureBox.Image = Resources.UnknownItem;
-                                        Slot47_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 47 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot47Amount) + " | Variation: " + (MemLib.ReadInt(slot47Variation)) + " | Skillset: " + (MemLib.ReadInt(slot47Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 47 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot47Amount) + " | Variation: " + (MemLib.ReadInt(slot47Variation)) + " | Skillset: " + (MemLib.ReadInt(slot47Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot47_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot47Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot47_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot47Item);
-                        infoAmount = MemLib.ReadInt(slot47Amount);
-                        infoVariant = MemLib.ReadInt(slot47Variation);
-                        infoSkillset = MemLib.ReadInt(slot47Skillset);
-                    }
-                }
-                if (itemSlot == 48 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot48Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("940", NumberStyles.Integer)).ToString("X");
-                    string slot48Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("944", NumberStyles.Integer)).ToString("X");
-                    string slot48Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("948", NumberStyles.Integer)).ToString("X");
-                    string slot48Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("956", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot48Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot48Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot48Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot48Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot48Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot48Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot48Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot48Amount, "int", (MemLib.ReadUInt(slot48Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot48Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot48Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot48Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot48"))
-                            {
-                                ExportPlayerItems.Add("itemSlot48-ID", MemLib.ReadInt(slot48Item));
-                                ExportPlayerItems.Add("itemSlot48-Amount", MemLib.ReadInt(slot48Amount));
-                                ExportPlayerItems.Add("itemSlot48-Variation", MemLib.ReadInt(slot48Variation));
-                                ExportPlayerItems.Add("itemSlot48-Skillset", MemLib.ReadInt(slot48Skillset));
-                            }
-                        }
-                        else
+                        // Do some information stuff.
+                        if (GetItemInfo)
                         {
-                            // First Load
-                            type = MemLib.ReadInt(slot48Item);
-                            variation = MemLib.ReadInt(slot48Variation);
-                            skillset = MemLib.ReadInt(slot48Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot48_PictureBox.Image = null;
-                            }
-                            else if (Slot48_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot48_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot48_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot48_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot48_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot48_PictureBox.Image = Resources.UnknownItem;
-                                        Slot48_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 48 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot48Amount) + " | Variation: " + (MemLib.ReadInt(slot48Variation)) + " | Skillset: " + (MemLib.ReadInt(slot48Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 48 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot48Amount) + " | Variation: " + (MemLib.ReadInt(slot48Variation)) + " | Skillset: " + (MemLib.ReadInt(slot48Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot48_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot48Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot48_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot48Item);
-                        infoAmount = MemLib.ReadInt(slot48Amount);
-                        infoVariant = MemLib.ReadInt(slot48Variation);
-                        infoSkillset = MemLib.ReadInt(slot48Skillset);
-                    }
-                }
-                if (itemSlot == 49 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot49Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("960", NumberStyles.Integer)).ToString("X");
-                    string slot49Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("964", NumberStyles.Integer)).ToString("X");
-                    string slot49Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("968", NumberStyles.Integer)).ToString("X");
-                    string slot49Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("976", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot49Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot49Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot49Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot49Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot49Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot49Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot49Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot49Amount, "int", (MemLib.ReadUInt(slot49Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot49Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot49Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot49Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot49"))
-                            {
-                                ExportPlayerItems.Add("itemSlot49-ID", MemLib.ReadInt(slot49Item));
-                                ExportPlayerItems.Add("itemSlot49-Amount", MemLib.ReadInt(slot49Amount));
-                                ExportPlayerItems.Add("itemSlot49-Variation", MemLib.ReadInt(slot49Variation));
-                                ExportPlayerItems.Add("itemSlot49-Skillset", MemLib.ReadInt(slot49Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot49Item);
-                            variation = MemLib.ReadInt(slot49Variation);
-                            skillset = MemLib.ReadInt(slot49Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot49_PictureBox.Image = null;
-                            }
-                            else if (Slot49_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot49_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot49_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot49_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot49_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot49_PictureBox.Image = Resources.UnknownItem;
-                                        Slot49_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 49 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot49Amount) + " | Variation: " + (MemLib.ReadInt(slot49Variation)) + " | Skillset: " + (MemLib.ReadInt(slot49Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 49 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot49Amount) + " | Variation: " + (MemLib.ReadInt(slot49Variation)) + " | Skillset: " + (MemLib.ReadInt(slot49Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot49_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot49Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot49_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot49Item);
-                        infoAmount = MemLib.ReadInt(slot49Amount);
-                        infoVariant = MemLib.ReadInt(slot49Variation);
-                        infoSkillset = MemLib.ReadInt(slot49Skillset);
-                    }
-                }
-                if (itemSlot == 50 || loadInventory || CycleAll || ExportInventory)
-                {
-                    string slot50Item = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("980", NumberStyles.Integer)).ToString("X");
-                    string slot50Amount = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("984", NumberStyles.Integer)).ToString("X");
-                    string slot50Variation = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("988", NumberStyles.Integer)).ToString("X");
-                    string slot50Skillset = BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("996", NumberStyles.Integer)).ToString("X");
-
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set Values
-                    if (!loadInventory && !ExportInventory && !GetItemInfo)
-                    {
-                        // Add New Item
-                        MemLib.WriteMemory(slot50Item, "int", type.ToString()); // Write item type
-                        if (type == 0)
-                        {
-                            MemLib.WriteMemory(slot50Amount, "int", "0"); // Write item amount
-                            MemLib.WriteMemory(slot50Variation, "int", "0"); // Write item variation
-                            MemLib.WriteMemory(slot50Skillset, "int", "0"); // Write item skillset
-                            finalItemAmount = 0;
-                        }
-                        else
-                        {
-                            if (Overwrite)
-                            {
-                                MemLib.WriteMemory(slot50Amount, "int", amount.ToString()); // Write item amount
-                                MemLib.WriteMemory(slot50Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot50Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = amount;
-                            }
-                            else
-                            {
-                                MemLib.WriteMemory(slot50Amount, "int", (MemLib.ReadUInt(slot50Amount) + amount).ToString()); // Write item amount
-                                MemLib.WriteMemory(slot50Variation, "int", variation.ToString()); // Write item variation
-                                MemLib.WriteMemory(slot50Skillset, "int", skillset.ToString()); // Write item skillset
-                                finalItemAmount = (int)MemLib.ReadUInt(slot50Amount);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Export inventory to list.
-                        if (ExportInventory)
-                        {
-                            if (!ExportPlayerItems.ContainsKey("itemSlot50"))
-                            {
-                                ExportPlayerItems.Add("itemSlot50-ID", MemLib.ReadInt(slot50Item));
-                                ExportPlayerItems.Add("itemSlot50-Amount", MemLib.ReadInt(slot50Amount));
-                                ExportPlayerItems.Add("itemSlot50-Variation", MemLib.ReadInt(slot50Variation));
-                                ExportPlayerItems.Add("itemSlot50-Skillset", MemLib.ReadInt(slot50Skillset));
-                            }
-                        }
-                        else
-                        {
-                            // First Load
-                            type = MemLib.ReadInt(slot50Item);
-                            variation = MemLib.ReadInt(slot50Variation);
-                            skillset = MemLib.ReadInt(slot50Skillset);
-
-                            // Load Picture
-                            // Set image to null if type is zero.
-                            if (type.ToString() == "0")
-                            {
-                                Slot50_PictureBox.Image = null;
-                            }
-                            else if (Slot50_PictureBox.Image == null)
-                            {
-                                // Get Picture
-                                try
-                                {
-                                    // Check if image plus variation exists.
-                                    if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                                    {
-                                        Slot50_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                        Slot50_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                                    {
-                                        // Image without variation exists.
-                                        Slot50_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                        Slot50_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                                    }
-                                    else
-                                    {
-                                        // No image found.
-                                        Slot50_PictureBox.Image = Resources.UnknownItem;
-                                        Slot50_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-                                        // Do debug information.
-                                        if (Array.Exists(Debug_RichTextBox.Lines, element => element == ("ItemSlot: 50 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot50Amount) + " | Variation: " + (MemLib.ReadInt(slot50Variation)) + " | Skillset: " + (MemLib.ReadInt(slot50Skillset)))) == false) // Check if entree exists already.
-                                        {
-                                            Debug_RichTextBox.AppendText("ItemSlot: 50 | ItemID: " + type + " | Amount: " + MemLib.ReadInt(slot50Amount) + " | Variation: " + (MemLib.ReadInt(slot50Variation)) + " | Skillset: " + (MemLib.ReadInt(slot50Skillset)) + Environment.NewLine); // Record the missing values.
-                                        }
-                                    }
-
-                                    // Draw item amount.
-                                    using (Font font = new Font("Arial", 24f))
-                                    using (Graphics G = Graphics.FromImage(Slot50_PictureBox.Image))
-                                    using (GraphicsPath gp = new GraphicsPath())
-                                    {
-                                        // Do drawling actions.
-                                        gp.AddString(MemLib.ReadInt(slot50Amount).ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                        G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                        G.FillPath(new SolidBrush(Color.White), gp);
-                                    }
-                                    Slot50_PictureBox.Invalidate(); // Reload picturebox.
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
+                            infoType = MemLib.ReadInt(slotItem);
+                            infoAmount = MemLib.ReadInt(slotAmount);
+                            infoVariant = MemLib.ReadInt(slotVariation);
+                            infoSkillset = MemLib.ReadInt(slotSkillset);
                         }
-                    }
-
-                    // Do some textbox scrolling.
-                    Debug_RichTextBox.ScrollToCaret();
-
-                    // Do some information stuff.
-                    if (GetItemInfo)
-                    {
-                        infoType = MemLib.ReadInt(slot50Item);
-                        infoAmount = MemLib.ReadInt(slot50Amount);
-                        infoVariant = MemLib.ReadInt(slot50Variation);
-                        infoSkillset = MemLib.ReadInt(slot50Skillset);
                     }
                 }
             }
@@ -7476,7 +1313,6 @@ namespace CoreKeeperInventoryEditor
             {
                 // Do nothing.
             }
-
             #endregion
 
             // Save the player Json.
@@ -7561,11 +1397,11 @@ namespace CoreKeeperInventoryEditor
                 string itemMessage = "";
                 if (infoVariant >= 1)
                 {
-                    itemMessage = "Inventory Slot " + itemSlot + "'s Item Info: " + Environment.NewLine + Environment.NewLine + "Name: " + baseItemName + Environment.NewLine + "Base ID: " + infoType + Environment.NewLine + "Amount: " + infoAmount + Environment.NewLine + "Skillset: " + infoSkillset + Environment.NewLine + Environment.NewLine + "Variant IDs: (" + infoVariant + ")" + Environment.NewLine + "- ingredient1: " + baseingredient1Name + " [" + VariationHelper.GetIngredient1FromFoodVariation(infoVariant) + "]" + Environment.NewLine + "- ingredient2: " + baseingredient2Name + " [" + VariationHelper.GetIngredient2FromFoodVariation(infoVariant) + "]";
+                    itemMessage = $"Inventory Slot {ItemSlot}'s Item Info:\n\nName: {baseItemName}\nBase ID: {infoType}\nAmount: {infoAmount}\nSkillset: {infoSkillset}\n\nVariant IDs: ({infoVariant})\n- ingredient1: {baseingredient1Name} [{VariationHelper.GetIngredient1FromFoodVariation(infoVariant)}]\n- ingredient2: {baseingredient2Name} [{VariationHelper.GetIngredient2FromFoodVariation(infoVariant)}]";
                 }
                 else
                 {
-                    itemMessage = "Inventory Slot " + itemSlot + "'s Item Info: " + Environment.NewLine + Environment.NewLine + "Name: " + baseItemName + Environment.NewLine + "ID: " + infoType + Environment.NewLine + "Amount: " + infoAmount + Environment.NewLine + "Skillset: " + infoSkillset + Environment.NewLine + Environment.NewLine + "Variant ID: " + infoVariant;
+                    itemMessage = $"Inventory Slot {ItemSlot}'s Item Info:\n\nName: {baseItemName}\nBase ID: {infoType}\nAmount: {infoAmount}\nSkillset: {infoSkillset}\n\nVariant ID: {infoVariant}";
                 }
 
                 // Display informational messagebox.
@@ -7580,3158 +1416,75 @@ namespace CoreKeeperInventoryEditor
             // Define variable for addtoempty.
             bool emptySlotFound = false;
 
-            // Load Picture
-            if (!loadInventory && !GetItemInfo && (itemSlot == 1 || CycleAll || AddToEmpty))
+            // Dynamically populate each item slot.
+            for (int i = 1; i <= slotCount; i++)
             {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot1_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 1, type: type, amount: amount, variation: variation);
+                // Define the picturebox control.
+                var slotPictureBoxControl = this.Controls.Find($"Slot{i}_PictureBox", searchAllChildren: true).FirstOrDefault() as PictureBox;
 
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
+                // Load Picture
+                if (!LoadInventory && !GetItemInfo && (ItemSlot == i || CycleAll || AddToEmpty))
                 {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
+                    // If slot is empty, add item to inventory.
+                    if (AddToEmpty && slotPictureBoxControl.Image == null && !emptySlotFound)
                     {
-                        Slot1_PictureBox.Image = null;
+                        // Add item to inventory.
+                        AddItemToInv(ItemSlot: i, Type: Type, Amount: Amount, Variation: Variation);
+
+                        // Update bool.
+                        emptySlotFound = true;
                     }
-                    else
+                    else if (!AddToEmpty)
                     {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot1_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot1_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot1_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot1_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot1_PictureBox.Image = Resources.UnknownItem;
-                                Slot1_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
+                        // Perform progress step.
+                        Inventory_ProgressBar.PerformStep();
 
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot1_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot1_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
+                        // Set image to null if Type is zero.
+                        if (Type.ToString() == "0")
                         {
+                            slotPictureBoxControl.Image = null;
+                        }
+                        else
+                        {
+                            // Get Picture
+                            try
+                            {
+                                // Check if image plus Variation exists.
+                                if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == Type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (Variation == 0 ? 0 : Variation).ToString()) != null)
+                                {
+                                    slotPictureBoxControl.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == Type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (Variation == 0 ? 0 : Variation).ToString()))); // Check if file matches current Type, set it.
+                                    slotPictureBoxControl.SizeMode = PictureBoxSizeMode.Zoom;
+                                }
+                                else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == Type.ToString()) != null)
+                                {
+                                    // Image without Variation exists.
+                                    slotPictureBoxControl.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == Type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current Type, set it.
+                                    slotPictureBoxControl.SizeMode = PictureBoxSizeMode.Zoom;
+                                }
+                                else
+                                {
+                                    // No image found.
+                                    slotPictureBoxControl.Image = Resources.UnknownItem;
+                                    slotPictureBoxControl.SizeMode = PictureBoxSizeMode.Zoom;
+                                }
+
+                                // Draw item Amount.
+                                using (Font font = new Font("Arial", 24f))
+                                using (Graphics G = Graphics.FromImage(slotPictureBoxControl?.Image))
+                                using (GraphicsPath gp = new GraphicsPath())
+                                {
+                                    // Do drawling actions.
+                                    gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
+                                    G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
+                                    G.FillPath(new SolidBrush(Color.White), gp);
+                                }
+                                slotPictureBoxControl?.Invalidate(); // Reload picturebox.
+                            }
+                            catch (Exception) { } // Swallow safely.
                         }
                     }
                 }
             }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 2 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot2_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 2, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot2_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot2_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot2_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot2_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot2_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot2_PictureBox.Image = Resources.UnknownItem;
-                                Slot2_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot2_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot2_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 3 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot3_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 3, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot3_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot3_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot3_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot3_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot3_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot3_PictureBox.Image = Resources.UnknownItem;
-                                Slot3_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot3_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot3_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 4 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot4_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 4, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot4_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot4_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot4_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot4_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot4_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot4_PictureBox.Image = Resources.UnknownItem;
-                                Slot4_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot4_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot4_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 5 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot5_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 5, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot5_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot5_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot5_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot5_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot5_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot5_PictureBox.Image = Resources.UnknownItem;
-                                Slot5_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot5_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot5_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 6 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot6_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 6, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot6_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot6_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot6_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot6_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot6_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot6_PictureBox.Image = Resources.UnknownItem;
-                                Slot6_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot6_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot6_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 7 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot7_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 7, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot7_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot7_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot7_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot7_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot7_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot7_PictureBox.Image = Resources.UnknownItem;
-                                Slot7_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot7_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot7_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 8 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot8_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 8, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot8_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot8_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot8_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot8_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot8_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot8_PictureBox.Image = Resources.UnknownItem;
-                                Slot8_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot8_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot8_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 9 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot9_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 9, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot9_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot9_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot9_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot9_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot9_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot9_PictureBox.Image = Resources.UnknownItem;
-                                Slot9_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot9_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot9_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 10 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot10_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 10, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot10_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot10_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot10_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot10_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot10_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot10_PictureBox.Image = Resources.UnknownItem;
-                                Slot10_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot10_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot10_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 11 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot11_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 11, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot11_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot11_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot11_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot11_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot11_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot11_PictureBox.Image = Resources.UnknownItem;
-                                Slot11_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot11_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot11_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 12 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot12_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 12, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot12_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot12_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot12_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot12_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot12_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot12_PictureBox.Image = Resources.UnknownItem;
-                                Slot12_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot12_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot12_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 13 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot13_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 13, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot13_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot13_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot13_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot13_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot13_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot13_PictureBox.Image = Resources.UnknownItem;
-                                Slot13_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot13_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot13_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 14 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot14_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 14, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot14_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot14_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot14_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot14_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot14_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot14_PictureBox.Image = Resources.UnknownItem;
-                                Slot14_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot14_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot14_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 15 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot15_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 15, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot15_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot15_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot15_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot15_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot15_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot15_PictureBox.Image = Resources.UnknownItem;
-                                Slot15_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot15_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot15_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 16 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot16_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 16, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot16_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot16_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot16_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot16_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot16_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot16_PictureBox.Image = Resources.UnknownItem;
-                                Slot16_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot16_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot16_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 17 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot17_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 17, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot17_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot17_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot17_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot17_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot17_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot17_PictureBox.Image = Resources.UnknownItem;
-                                Slot17_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot17_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot17_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 18 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot18_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 18, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot18_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot18_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot18_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot18_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot18_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot18_PictureBox.Image = Resources.UnknownItem;
-                                Slot18_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot18_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot18_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 19 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot19_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 19, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot19_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot19_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot19_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot19_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot19_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot19_PictureBox.Image = Resources.UnknownItem;
-                                Slot19_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot19_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot19_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 20 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot20_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 20, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot20_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot20_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot20_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot20_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot20_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot20_PictureBox.Image = Resources.UnknownItem;
-                                Slot20_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot20_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot20_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 21 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot21_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 21, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot21_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot21_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot21_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot21_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot21_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot21_PictureBox.Image = Resources.UnknownItem;
-                                Slot21_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot21_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot21_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 22 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot22_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 22, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot22_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot22_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot22_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot22_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot22_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot22_PictureBox.Image = Resources.UnknownItem;
-                                Slot22_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot22_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot22_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 23 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot23_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 23, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot23_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot23_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot23_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot23_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot23_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot23_PictureBox.Image = Resources.UnknownItem;
-                                Slot23_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot23_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot23_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 24 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot24_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 24, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot24_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot24_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot24_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot24_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot24_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot24_PictureBox.Image = Resources.UnknownItem;
-                                Slot24_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot24_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot24_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 25 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot25_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 25, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot25_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot25_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot25_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot25_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot25_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot25_PictureBox.Image = Resources.UnknownItem;
-                                Slot25_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot25_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot25_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 26 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot26_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 26, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot26_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot26_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot26_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot26_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot26_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot26_PictureBox.Image = Resources.UnknownItem;
-                                Slot26_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot26_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot26_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 27 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot27_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 27, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot27_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot27_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot27_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot27_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot27_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot27_PictureBox.Image = Resources.UnknownItem;
-                                Slot27_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot27_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot27_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 28 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot28_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 28, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot28_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot28_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot28_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot28_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot28_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot28_PictureBox.Image = Resources.UnknownItem;
-                                Slot28_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot28_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot28_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 29 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot29_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 29, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot29_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot29_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot29_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot29_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot29_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot29_PictureBox.Image = Resources.UnknownItem;
-                                Slot29_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot29_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot29_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 30 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot30_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 30, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot30_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot30_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot30_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot30_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot30_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot30_PictureBox.Image = Resources.UnknownItem;
-                                Slot30_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot30_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot30_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 31 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot31_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 31, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot31_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot31_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot31_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot31_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot31_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot31_PictureBox.Image = Resources.UnknownItem;
-                                Slot31_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot31_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot31_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 32 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot32_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 32, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot32_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot32_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot32_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot32_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot32_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot32_PictureBox.Image = Resources.UnknownItem;
-                                Slot32_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot32_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot32_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 33 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot33_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 33, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot33_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot33_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot33_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot33_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot33_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot33_PictureBox.Image = Resources.UnknownItem;
-                                Slot33_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot33_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot33_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 34 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot34_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 34, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot34_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot34_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot34_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot34_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot34_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot34_PictureBox.Image = Resources.UnknownItem;
-                                Slot34_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot34_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot34_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 35 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot35_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 35, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot35_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot35_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot35_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot35_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot35_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot35_PictureBox.Image = Resources.UnknownItem;
-                                Slot35_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot35_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot35_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 36 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot36_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 36, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot36_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot36_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot36_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot36_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot36_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot36_PictureBox.Image = Resources.UnknownItem;
-                                Slot36_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot36_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot36_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 37 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot37_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 37, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot37_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot37_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot37_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot37_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot37_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot37_PictureBox.Image = Resources.UnknownItem;
-                                Slot37_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot37_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot37_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 38 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot38_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 38, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot38_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot38_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot38_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot38_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot38_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot38_PictureBox.Image = Resources.UnknownItem;
-                                Slot38_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot38_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot38_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 39 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot39_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 39, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot39_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot39_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot39_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot39_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot39_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot39_PictureBox.Image = Resources.UnknownItem;
-                                Slot39_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot39_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot39_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 40 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot40_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 40, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot40_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot40_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot40_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot40_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot40_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot40_PictureBox.Image = Resources.UnknownItem;
-                                Slot40_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot40_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot40_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 41 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot41_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 41, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot41_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot41_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot41_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot41_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot41_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot41_PictureBox.Image = Resources.UnknownItem;
-                                Slot41_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot41_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot41_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 42 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot42_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 42, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot42_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot42_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot42_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot42_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot42_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot42_PictureBox.Image = Resources.UnknownItem;
-                                Slot42_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot42_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot42_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 43 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot43_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 43, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot43_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot43_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot43_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot43_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot43_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot43_PictureBox.Image = Resources.UnknownItem;
-                                Slot43_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot43_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot43_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 44 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot44_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 44, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot44_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot44_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot44_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot44_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot44_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot44_PictureBox.Image = Resources.UnknownItem;
-                                Slot44_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot44_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot44_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 45 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot45_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 45, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot45_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot45_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot45_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot45_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot45_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot45_PictureBox.Image = Resources.UnknownItem;
-                                Slot45_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot45_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot45_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 46 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot46_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 46, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot46_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot46_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot46_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot46_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot46_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot46_PictureBox.Image = Resources.UnknownItem;
-                                Slot46_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot4_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot46_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 47 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot4_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 47, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot47_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot47_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot47_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot47_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot47_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot47_PictureBox.Image = Resources.UnknownItem;
-                                Slot47_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot47_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot47_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 48 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot48_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 48, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot48_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot48_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot48_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot48_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot48_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot48_PictureBox.Image = Resources.UnknownItem;
-                                Slot48_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot48_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot48_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 49 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot49_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 49, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot49_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot49_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot49_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot49_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot49_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot49_PictureBox.Image = Resources.UnknownItem;
-                                Slot49_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot49_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot49_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-            if (!loadInventory && !GetItemInfo && (itemSlot == 50 || CycleAll || AddToEmpty))
-            {
-                // If slot is empty, add item to inventory.
-                if (AddToEmpty && Slot50_PictureBox.Image == null && !emptySlotFound)
-                {
-                    // Add item to inventory.
-                    AddItemToInv(itemSlot: 50, type: type, amount: amount, variation: variation);
-
-                    // Update bool.
-                    emptySlotFound = true;
-                }
-                else if (!AddToEmpty)
-                {
-                    // Perform progress step.
-                    Inventory_ProgressBar.PerformStep();
-
-                    // Set image to null if type is zero.
-                    if (type.ToString() == "0")
-                    {
-                        Slot50_PictureBox.Image = null;
-                    }
-                    else
-                    {
-                        // Get Picture
-                        try
-                        {
-                            // Check if image plus variation exists.
-                            if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()) != null)
-                            {
-                                Slot50_PictureBox.Image = new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == (variation == 0 ? 0 : variation).ToString()))); // Check if file matches current type, set it.
-                                Slot50_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else if (ImageFiles1.FirstOrDefault(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString()) != null)
-                            {
-                                // Image without variation exists.
-                                Slot50_PictureBox.Image = MakeGrayscale3(new Bitmap(ImageFast.FromFile(ImageFiles1.First(x => new FileInfo(x).Name.Split(',')[0] != "desktop.ini" && new FileInfo(x).Name.Split(',')[0] != "Thumbs.db" && new FileInfo(x).Name.Split(',')[1] == type.ToString() && new FileInfo(x).Name.Split(',')[2].Split('.')[0] == "0")))); // Check if file matches current type, set it.
-                                Slot50_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-                            else
-                            {
-                                // No image found.
-                                Slot50_PictureBox.Image = Resources.UnknownItem;
-                                Slot50_PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                            }
-
-                            // Draw item amount.
-                            using (Font font = new Font("Arial", 24f))
-                            using (Graphics G = Graphics.FromImage(Slot50_PictureBox.Image))
-                            using (GraphicsPath gp = new GraphicsPath())
-                            {
-                                // Do drawling actions.
-                                gp.AddString(finalItemAmount.ToString(), font.FontFamily, (int)font.Style, font.Size, ClientRectangle, new StringFormat());
-                                G.DrawPath(new Pen(Color.Black, 4) { LineJoin = LineJoin.Round }, gp);
-                                G.FillPath(new SolidBrush(Color.White), gp);
-                            }
-                            Slot50_PictureBox.Invalidate(); // Reload picturebox.
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-            }
-
             #endregion
 
             // Check if there was no slots empty.
@@ -10777,7 +1530,7 @@ namespace CoreKeeperInventoryEditor
             Inventory_RichTextBox.Text += "]";
 
             // Load addresses.
-            AddItemToInv(loadInventory: true);
+            AddItemToInv(LoadInventory: true);
         }
 
         // Toggle on and off the placeholder torches.
@@ -10831,7 +1584,7 @@ namespace CoreKeeperInventoryEditor
             Inventory_RichTextBox.Text += "]";
 
             // Load addresses.
-            AddItemToInv(loadInventory: true);
+            AddItemToInv(LoadInventory: true);
         }
 
         // Reload Inventory.
@@ -10845,7 +1598,7 @@ namespace CoreKeeperInventoryEditor
             Inventory_ProgressBar.Visible = true;
 
             // Reload Inventory.
-            AddItemToInv(loadInventory: true);
+            AddItemToInv(LoadInventory: true);
         }
 
         // Remove entire Inventory.
@@ -10857,7 +1610,7 @@ namespace CoreKeeperInventoryEditor
                 RemoveAll_Button.Text = "Clearing..";
 
                 // Reload Inventory.
-                AddItemToInv(type: 0, amount: 1, variation: 0, CycleAll: true);
+                AddItemToInv(Type: 0, Amount: 1, Variation: 0, CycleAll: true);
             }
         }
 
@@ -10876,9 +1629,9 @@ namespace CoreKeeperInventoryEditor
                 inventoryInformation = null;
 
                 // Toggle slider.
-                InfiniteResources_ToggleSwith.CheckedChanged -= InfiniteResources_ToggleSwith_CheckedChanged;
-                InfiniteResources_ToggleSwith.Checked = false;
-                InfiniteResources_ToggleSwith.CheckedChanged += InfiniteResources_ToggleSwith_CheckedChanged;
+                InfiniteResources_ToggleSwitch.CheckedChanged -= InfiniteResources_ToggleSwitch_CheckedChanged;
+                InfiniteResources_ToggleSwitch.Checked = false;
+                InfiniteResources_ToggleSwitch.CheckedChanged += InfiniteResources_ToggleSwitch_CheckedChanged;
             }
 
             PictureBox pic = sender as PictureBox;
@@ -10888,30 +1641,39 @@ namespace CoreKeeperInventoryEditor
             {
                 if (e.Button == MouseButtons.Left) // Load inventory editor.
                 {
+                    // Before showing the InventoryEditor popup form, check if the images are already loaded in memory cache.
+                    // If not, load them now (this only happens once).
+                    if (!InventoryImageCache.IsLoaded)
+                    {
+                        // Loads all images from disk into memory (static cache).
+                        // Pass the FolderNames to tell it what folders to load.
+                        InventoryImageCache.LoadAllImages(ItemSelectionMenu.FolderNames);
+                    }
+
                     // Get the picturebox selected number.
                     int slotNumber = int.Parse(pic.Name.Replace("Slot", "").Replace("_PictureBox", ""));
 
                     // Spawn item picker window.
-                    InventoryEditor frm2 = new InventoryEditor();
-                    DialogResult dr = frm2.ShowDialog(this);
+                    ItemSelectionMenu itemSelectionMenu = new ItemSelectionMenu();
+                    DialogResult dr = itemSelectionMenu.ShowDialog(this);
 
                     // Get returned item from picker.
-                    int itemType = frm2.GetItemTypeFromList();
-                    int itemAmount = frm2.GetItemAmountFromList();
-                    int itemVariation = frm2.GetItemVeriationFromList() == 0 ? 0 : (frm2.GetItemVeriationFromList()); // If variation is not zero, add offset.
-                    int itemSkillset = frm2.GetItemSkillsetFromList();
-                    bool wasAborted = frm2.GetUserCanceldTask();
-                    bool itemOverwrite = frm2.GetSelectedOverwriteTask();
-                    frm2.Close();
+                    int itemType       = itemSelectionMenu.GetItemTypeFromList();
+                    int itemAmount     = itemSelectionMenu.GetItemAmountFromList();
+                    int itemVariation  = itemSelectionMenu.GetItemVeriationFromList() == 0 ? 0 : (itemSelectionMenu.GetItemVeriationFromList()); // If variation is not zero, add offset.
+                    int itemSkillset   = itemSelectionMenu.GetItemSkillsetFromList()  == 0 ? 0 : (itemSelectionMenu.GetItemSkillsetFromList());  // If skillset is not zero, add offset.
+                    bool wasAborted    = itemSelectionMenu.GetUserCanceldTask();
+                    bool itemOverwrite = itemSelectionMenu.GetSelectedOverwriteTask();
+                    itemSelectionMenu.Close();
 
                     // Check if user closed the form
                     if (wasAborted) { return; };
 
                     // Spawn the item.
-                    AddItemToInv(slotNumber, type: itemType, amount: itemAmount, variation: itemVariation, Overwrite: itemOverwrite);
+                    AddItemToInv(slotNumber, Type: itemType, Amount: itemAmount, Variation: itemVariation, Skillset: itemSkillset, Overwrite: itemOverwrite);
 
                     // Reload Inventory. Added: v1.3.4.5.
-                    AddItemToInv(loadInventory: true);
+                    AddItemToInv(LoadInventory: true);
                 }
                 else if (e.Button == MouseButtons.Middle) // Get item stats.
                 {
@@ -10922,7 +1684,7 @@ namespace CoreKeeperInventoryEditor
                     AddItemToInv(slotNumber, GetItemInfo: true);
 
                     // Reload Inventory. Added: v1.3.4.5.
-                    AddItemToInv(loadInventory: true);
+                    AddItemToInv(LoadInventory: true);
                 }
                 else if (e.Button == MouseButtons.Right) // Change item amount value.
                 {
@@ -10955,26 +1717,26 @@ namespace CoreKeeperInventoryEditor
                     Settings.Default.InfoSkillset = itemInfo[3];
 
                     // Spawn item picker window.
-                    ItemEditor frm3 = new ItemEditor();
-                    DialogResult dr = frm3.ShowDialog(this);
+                    ItemEditor itemEditor = new ItemEditor();
+                    DialogResult dr = itemEditor.ShowDialog(this);
 
                     // Get returned item from picker.
-                    int itemType = frm3.GetItemTypeFromList();
-                    int itemAmount = frm3.GetItemAmountFromList();
-                    int itemVariation = frm3.GetItemVeriationFromList() == 0 ? 0 : (frm3.GetItemVeriationFromList()); // If variation is not zero, add offset.
-                    int itemSkillset = frm3.GetItemSkillsetFromList();
-                    bool wasAborted = frm3.GetUserCanceldTask();
-                    // bool itemOverwrite = frm3.GetSelectedOverwriteTask();
-                    frm3.Close();
+                    int itemType      = itemEditor.GetItemTypeFromList();
+                    int itemAmount    = itemEditor.GetItemAmountFromList();
+                    int itemVariation = itemEditor.GetItemVeriationFromList() == 0 ? 0 : (itemEditor.GetItemVeriationFromList()); // If variation is not zero, add offset.
+                    int itemSkillset  = itemEditor.GetItemSkillsetFromList()  == 0 ? 0 : (itemEditor.GetItemSkillsetFromList());  // If skillset is not zero, add offset.
+                    bool wasAborted   = itemEditor.GetUserCanceldTask();
+                    // bool itemOverwrite = itemEditor.GetSelectedOverwriteTask();
+                    itemEditor.Close();
 
                     // Check if user closed the form
                     if (wasAborted) { return; };
 
                     // Edit the item.
-                    AddItemToInv(slotNumber, type: itemType, amount: itemAmount, variation: itemVariation, skillset: itemSkillset, Overwrite: true);
+                    AddItemToInv(slotNumber, Type: itemType, Amount: itemAmount, Variation: itemVariation, Skillset: itemSkillset, Overwrite: true);
 
                     // Reload Inventory. Added: v1.3.4.5.
-                    AddItemToInv(loadInventory: true);
+                    AddItemToInv(LoadInventory: true);
                 }
             }
         }
@@ -10990,10 +1752,10 @@ namespace CoreKeeperInventoryEditor
             int[] itemInfo = new int[4];
 
             // Define some variables for item info.
-            int infoType;
-            int infoAmount;
-            int infoVariant;
-            int infoSkillset;
+            int infoType     = 0;
+            int infoAmount   = 0;
+            int infoVariant  = 0;
+            int infoSkillset = 0;
 
             // Select the inventory to use.
             var res = AoBScanResultsInventory.ElementAt(useAddress - 1);
@@ -11002,362 +1764,36 @@ namespace CoreKeeperInventoryEditor
             // Base address was moved 9 bits.
             string baseAddress = BigInteger.Add(BigInteger.Parse(res.ToString("X").ToString(), NumberStyles.HexNumber), BigInteger.Parse("7", NumberStyles.Integer)).ToString("X");
 
-            if (itemSlot == 1)
+            // Count the total amount of pictureboxes on the inventory tab.
+            int slotCount = Main_TabControl.TabPages["Inventory_TabPage"].Controls.OfType<PictureBox>().Count();
+
+            // Make some exception catches.
+            try
             {
-                infoType = (int)MemLib.ReadUInt(baseAddress);
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("4", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("8", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("16", NumberStyles.Integer)).ToString("X"));
+                // Dynamically populate each item slot.
+                for (int i = 1; i <= slotCount; i++)
+                {
+                    if (itemSlot == i)
+                    {
+                        // Dynamically get the addresses for each slot property.
+                        infoType     = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse((0  + (20 * (i - 1))).ToString(), NumberStyles.Integer)).ToString("X"));
+                        infoAmount   = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse((4  + (20 * (i - 1))).ToString(), NumberStyles.Integer)).ToString("X"));
+                        infoVariant  = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse((8  + (20 * (i - 1))).ToString(), NumberStyles.Integer)).ToString("X"));
+                        infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse((16 + (20 * (i - 1))).ToString(), NumberStyles.Integer)).ToString("X"));
+                        break; // Break loop once found.
+                    }
+                    else if (i < slotCount || i > slotCount) // Prevent out of range errors.
+                    {
+                        infoType     = 0;
+                        infoAmount   = 0;
+                        infoVariant  = 0;
+                        infoSkillset = 0;
+                    }
+                }
             }
-            else if (itemSlot == 2)
+            catch (Exception)
             {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("20", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("24", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("28", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("36", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 3)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("40", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("44", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("48", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("56", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 4)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("60", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("64", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("68", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("76", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 5)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("80", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("84", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("88", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("96", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 6)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("100", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("104", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("108", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("116", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 7)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("120", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("124", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("128", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("136", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 8)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("140", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("144", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("148", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("156", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 9)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("160", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("164", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("168", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("176", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 10)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("180", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("184", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("188", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("196", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 11)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("200", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("204", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("208", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("216", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 12)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("220", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("224", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("228", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("236", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 13)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("240", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("244", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("248", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("256", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 14)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("260", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("264", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("268", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("276", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 15)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("280", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("284", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("288", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("296", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 16)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("300", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("304", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("308", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("316", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 17)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("320", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("324", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("328", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("336", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 18)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("340", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("344", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("348", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("356", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 19)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("360", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("364", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("368", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("376", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 20)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("380", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("384", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("388", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("396", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 21)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("400", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("404", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("408", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("416", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 22)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("420", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("424", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("428", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("436", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 23)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("440", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("444", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("448", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("456", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 24)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("460", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("464", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("468", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("476", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 25)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("480", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("484", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("488", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("496", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 26)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("500", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("504", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("508", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("516", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 27)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("520", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("524", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("528", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("536", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 28)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("540", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("544", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("548", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("556", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 29)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("560", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("564", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("568", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("576", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 30)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("580", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("584", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("588", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("596", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 31)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("600", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("604", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("608", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("616", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 32)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("620", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("624", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("628", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("636", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 33)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("640", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("644", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("648", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("656", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 34)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("660", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("664", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("668", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("676", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 35)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("680", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("684", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("688", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("696", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 36)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("700", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("704", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("708", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("716", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 37)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("720", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("724", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("728", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("736", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 38)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("740", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("744", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("748", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("756", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 39)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("760", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("764", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("768", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("776", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 40)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("780", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("784", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("788", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("796", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 41)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("800", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("804", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("808", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("816", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 42)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("820", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("824", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("828", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("836", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 43)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("840", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("844", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("848", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("856", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 44)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("860", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("964", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("868", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("876", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 45)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("880", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("884", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("888", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("896", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 46)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("900", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("904", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("908", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("916", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 47)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("920", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("924", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("928", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("936", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 48)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("940", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("944", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("948", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("956", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 49)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("960", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("964", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("968", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("976", NumberStyles.Integer)).ToString("X"));
-            }
-            else if (itemSlot == 50)
-            {
-                infoType = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("980", NumberStyles.Integer)).ToString("X"));
-                infoAmount = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("984", NumberStyles.Integer)).ToString("X"));
-                infoVariant = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("988", NumberStyles.Integer)).ToString("X"));
-                infoSkillset = (int)MemLib.ReadUInt(BigInteger.Add(BigInteger.Parse(baseAddress, NumberStyles.HexNumber), BigInteger.Parse("996", NumberStyles.Integer)).ToString("X"));
-            }
-            else // Prevent out of range errors.
-            {
-                infoType = 0;
-                infoAmount = 0;
-                infoVariant = 0;
-                infoSkillset = 0;
+                // Do nothing.
             }
 
             // Define item info string.
@@ -11592,11 +2028,11 @@ namespace CoreKeeperInventoryEditor
                                         // Add the item to the inventory.
                                         if (itemVariation == 0)
                                         {
-                                            AddItemToInv(itemSlot: ItemSlotCount, type: itemID, amount: itemAmount, variation: itemVariation, skillset: itemSkillset, Overwrite: true);
+                                            AddItemToInv(ItemSlot: ItemSlotCount, Type: itemID, Amount: itemAmount, Variation: itemVariation, Skillset: itemSkillset, Overwrite: true);
                                         }
                                         else
                                         {
-                                            AddItemToInv(itemSlot: ItemSlotCount, type: itemID, amount: itemAmount, variation: itemVariation, skillset: itemSkillset, Overwrite: true);
+                                            AddItemToInv(ItemSlot: ItemSlotCount, Type: itemID, Amount: itemAmount, Variation: itemVariation, Skillset: itemSkillset, Overwrite: true);
                                         }
 
                                         // Add one to the loopcount.
@@ -11752,22 +2188,22 @@ namespace CoreKeeperInventoryEditor
 
         // Toggle free crafting.
         public IEnumerable<long> AoBScanResultsFreeCraftingTools = null;
-        private async void FreeCrafting_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private async void FreeCrafting_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                FreeCrafting_ToggleSwith.CheckedChanged -= FreeCrafting_ToggleSwith_CheckedChanged;
-                FreeCrafting_ToggleSwith.Checked = false;
-                FreeCrafting_ToggleSwith.CheckedChanged += FreeCrafting_ToggleSwith_CheckedChanged;
+                FreeCrafting_ToggleSwitch.CheckedChanged -= FreeCrafting_ToggleSwitch_CheckedChanged;
+                FreeCrafting_ToggleSwitch.Checked = false;
+                FreeCrafting_ToggleSwitch.CheckedChanged += FreeCrafting_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if the slider was not yet checked.
-            if (FreeCrafting_ToggleSwith.Checked)
+            if (FreeCrafting_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Name button to indicate loading.
@@ -11812,9 +2248,9 @@ namespace CoreKeeperInventoryEditor
                     AoBScanResultsFreeCraftingTools = null;
 
                     // Toggle slider.
-                    FreeCrafting_ToggleSwith.CheckedChanged -= FreeCrafting_ToggleSwith_CheckedChanged;
-                    FreeCrafting_ToggleSwith.Checked = false;
-                    FreeCrafting_ToggleSwith.CheckedChanged += FreeCrafting_ToggleSwith_CheckedChanged;
+                    FreeCrafting_ToggleSwitch.CheckedChanged -= FreeCrafting_ToggleSwitch_CheckedChanged;
+                    FreeCrafting_ToggleSwitch.Checked = false;
+                    FreeCrafting_ToggleSwitch.CheckedChanged += FreeCrafting_ToggleSwitch_CheckedChanged;
 
                     // Display error message.
                     MessageBox.Show("There was an issue trying to fetch the free crafting addresses." + Environment.NewLine + "Try reloading the game!!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -11883,15 +2319,15 @@ namespace CoreKeeperInventoryEditor
         readonly System.Timers.Timer playersKeepInventoryTimer = new System.Timers.Timer();
         List<Tuple<int, int[]>> keepInventoryInformation = new List<Tuple<int, int[]>>();
         string playerHealthAddress = "0";
-        private void KeepInventory_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void KeepInventory_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                KeepInventory_ToggleSwith.CheckedChanged -= KeepInventory_ToggleSwith_CheckedChanged;
-                KeepInventory_ToggleSwith.Checked = false;
-                KeepInventory_ToggleSwith.CheckedChanged += KeepInventory_ToggleSwith_CheckedChanged;
+                KeepInventory_ToggleSwitch.CheckedChanged -= KeepInventory_ToggleSwitch_CheckedChanged;
+                KeepInventory_ToggleSwitch.Checked = false;
+                KeepInventory_ToggleSwitch.CheckedChanged += KeepInventory_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -11901,9 +2337,9 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsInventory == null)
             {
                 // Toggle slider.
-                KeepInventory_ToggleSwith.CheckedChanged -= KeepInventory_ToggleSwith_CheckedChanged;
-                KeepInventory_ToggleSwith.Checked = false;
-                KeepInventory_ToggleSwith.CheckedChanged += KeepInventory_ToggleSwith_CheckedChanged;
+                KeepInventory_ToggleSwitch.CheckedChanged -= KeepInventory_ToggleSwitch_CheckedChanged;
+                KeepInventory_ToggleSwitch.Checked = false;
+                KeepInventory_ToggleSwitch.CheckedChanged += KeepInventory_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Inventory addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -11913,16 +2349,16 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                KeepInventory_ToggleSwith.CheckedChanged -= KeepInventory_ToggleSwith_CheckedChanged;
-                KeepInventory_ToggleSwith.Checked = false;
-                KeepInventory_ToggleSwith.CheckedChanged += KeepInventory_ToggleSwith_CheckedChanged;
+                KeepInventory_ToggleSwitch.CheckedChanged -= KeepInventory_ToggleSwitch_CheckedChanged;
+                KeepInventory_ToggleSwitch.Checked = false;
+                KeepInventory_ToggleSwitch.CheckedChanged += KeepInventory_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if the slider was not yet checked.
-            if (KeepInventory_ToggleSwith.Checked)
+            if (KeepInventory_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Name button to indicate loading.
@@ -12078,7 +2514,7 @@ namespace CoreKeeperInventoryEditor
                     int savedItemVariation = inventorySlot.Item2[2];
 
                     // Change the existing items durability to it's original.
-                    AddItemToInv(itemSlot: slotNumber, type: savedItemType, amount: savedItemAmount, variation: savedItemVariation, Overwrite: true);
+                    AddItemToInv(ItemSlot: slotNumber, Type: savedItemType, Amount: savedItemAmount, Variation: savedItemVariation, Overwrite: true);
                 }
 
                 // Reset player died flag.
@@ -12095,15 +2531,15 @@ namespace CoreKeeperInventoryEditor
         // Toggle infinite resources.
         readonly System.Timers.Timer playersInfiniteResourcesTimer = new System.Timers.Timer();
         List<Tuple<int, int[]>> inventoryInformation = new List<Tuple<int, int[]>>();
-        private void InfiniteResources_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void InfiniteResources_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                InfiniteResources_ToggleSwith.CheckedChanged -= InfiniteResources_ToggleSwith_CheckedChanged;
-                InfiniteResources_ToggleSwith.Checked = false;
-                InfiniteResources_ToggleSwith.CheckedChanged += InfiniteResources_ToggleSwith_CheckedChanged;
+                InfiniteResources_ToggleSwitch.CheckedChanged -= InfiniteResources_ToggleSwitch_CheckedChanged;
+                InfiniteResources_ToggleSwitch.Checked = false;
+                InfiniteResources_ToggleSwitch.CheckedChanged += InfiniteResources_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -12113,16 +2549,16 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsInventory == null)
             {
                 // Toggle slider.
-                InfiniteResources_ToggleSwith.CheckedChanged -= InfiniteResources_ToggleSwith_CheckedChanged;
-                InfiniteResources_ToggleSwith.Checked = false;
-                InfiniteResources_ToggleSwith.CheckedChanged += InfiniteResources_ToggleSwith_CheckedChanged;
+                InfiniteResources_ToggleSwitch.CheckedChanged -= InfiniteResources_ToggleSwitch_CheckedChanged;
+                InfiniteResources_ToggleSwitch.Checked = false;
+                InfiniteResources_ToggleSwitch.CheckedChanged += InfiniteResources_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Inventory addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if the slider was not yet checked.
-            if (InfiniteResources_ToggleSwith.Checked)
+            if (InfiniteResources_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Name button to indicate loading.
@@ -12216,7 +2652,7 @@ namespace CoreKeeperInventoryEditor
                         else if (currentItemAmount < savedItemAmount)
                         {
                             // Change the existing items durability to it's original.
-                            AddItemToInv(itemSlot: slotNumber, type: savedItemType, amount: savedItemAmount, variation: savedItemVariation, Overwrite: true);
+                            AddItemToInv(ItemSlot: slotNumber, Type: savedItemType, Amount: savedItemAmount, Variation: savedItemVariation, Overwrite: true);
                         }
                     }
                 }
@@ -12326,22 +2762,22 @@ namespace CoreKeeperInventoryEditor
         // PlacementHandler.allowPlacingAnywhere;
         // Place anywhere.
         public IEnumerable<long> AoBScanResultsPlaceAnywhereTools = null;
-        private async void PlaceAnywhere_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private async void PlaceAnywhere_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                PlaceAnywhere_ToggleSwith.CheckedChanged -= PlaceAnywhere_ToggleSwith_CheckedChanged;
-                PlaceAnywhere_ToggleSwith.Checked = false;
-                PlaceAnywhere_ToggleSwith.CheckedChanged += PlaceAnywhere_ToggleSwith_CheckedChanged;
+                PlaceAnywhere_ToggleSwitch.CheckedChanged -= PlaceAnywhere_ToggleSwitch_CheckedChanged;
+                PlaceAnywhere_ToggleSwitch.Checked = false;
+                PlaceAnywhere_ToggleSwitch.CheckedChanged += PlaceAnywhere_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if the slider was not yet checked.
-            if (PlaceAnywhere_ToggleSwith.Checked)
+            if (PlaceAnywhere_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Name button to indicate loading.
@@ -12394,9 +2830,9 @@ namespace CoreKeeperInventoryEditor
                     AoBScanResultsPlaceAnywhereTools = null;
 
                     // Toggle slider.
-                    PlaceAnywhere_ToggleSwith.CheckedChanged -= PlaceAnywhere_ToggleSwith_CheckedChanged;
-                    PlaceAnywhere_ToggleSwith.Checked = false;
-                    PlaceAnywhere_ToggleSwith.CheckedChanged += PlaceAnywhere_ToggleSwith_CheckedChanged;
+                    PlaceAnywhere_ToggleSwitch.CheckedChanged -= PlaceAnywhere_ToggleSwitch_CheckedChanged;
+                    PlaceAnywhere_ToggleSwitch.Checked = false;
+                    PlaceAnywhere_ToggleSwitch.CheckedChanged += PlaceAnywhere_ToggleSwitch_CheckedChanged;
 
                     // Display error message.
                     MessageBox.Show("There was an issue trying to fetch the place anywhere addresses." + Environment.NewLine + "Try reloading the game!!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -12465,12 +2901,12 @@ namespace CoreKeeperInventoryEditor
         // PlayerController player = Manager.main.player;
         // Placement Range.
         public IEnumerable<long> AoBScanResultsPlacementRangeTools = null;
-        private async void Range_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private async void Range_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Mod is currently broken - toggle slider off.
-            Range_ToggleSwith.CheckedChanged -= Range_ToggleSwith_CheckedChanged;
-            Range_ToggleSwith.Checked = false;
-            Range_ToggleSwith.CheckedChanged += Range_ToggleSwith_CheckedChanged;
+            Range_ToggleSwitch.CheckedChanged -= Range_ToggleSwitch_CheckedChanged;
+            Range_ToggleSwitch.Checked = false;
+            Range_ToggleSwitch.CheckedChanged += Range_ToggleSwitch_CheckedChanged;
             return;
 
             #pragma warning disable // Suppress Unreachable code.
@@ -12478,16 +2914,16 @@ namespace CoreKeeperInventoryEditor
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                Range_ToggleSwith.CheckedChanged -= Range_ToggleSwith_CheckedChanged;
-                Range_ToggleSwith.Checked = false;
-                Range_ToggleSwith.CheckedChanged += Range_ToggleSwith_CheckedChanged;
+                Range_ToggleSwitch.CheckedChanged -= Range_ToggleSwitch_CheckedChanged;
+                Range_ToggleSwitch.Checked = false;
+                Range_ToggleSwitch.CheckedChanged += Range_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if the slider was not yet checked.
-            if (Range_ToggleSwith.Checked)
+            if (Range_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Name button to indicate loading.
@@ -12539,9 +2975,9 @@ namespace CoreKeeperInventoryEditor
                     AoBScanResultsPlacementRangeTools = null;
 
                     // Toggle slider.
-                    Range_ToggleSwith.CheckedChanged -= Range_ToggleSwith_CheckedChanged;
-                    Range_ToggleSwith.Checked = false;
-                    Range_ToggleSwith.CheckedChanged += Range_ToggleSwith_CheckedChanged;
+                    Range_ToggleSwitch.CheckedChanged -= Range_ToggleSwitch_CheckedChanged;
+                    Range_ToggleSwitch.Checked = false;
+                    Range_ToggleSwitch.CheckedChanged += Range_ToggleSwitch_CheckedChanged;
 
                     // Display error message.
                     MessageBox.Show("There was an issue trying to fetch the placement range addresses." + Environment.NewLine + "Try reloading the game!!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -12617,9 +3053,9 @@ namespace CoreKeeperInventoryEditor
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                DisplayLocation_ToggleSwith.CheckedChanged -= DisplayLocation_ToggleSwith_CheckedChanged;
-                DisplayLocation_ToggleSwith.Checked = false;
-                DisplayLocation_ToggleSwith.CheckedChanged += DisplayLocation_ToggleSwith_CheckedChanged;
+                DisplayLocation_ToggleSwitch.CheckedChanged -= DisplayLocation_ToggleSwitch_CheckedChanged;
+                DisplayLocation_ToggleSwitch.Checked = false;
+                DisplayLocation_ToggleSwitch.CheckedChanged += DisplayLocation_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -12638,11 +3074,11 @@ namespace CoreKeeperInventoryEditor
             // Spawn item picker window.
             try
             {
-                SkillEditor frm5 = new SkillEditor();
-                DialogResult dr = frm5.ShowDialog();
+                SkillEditor skillEditor = new SkillEditor();
+                DialogResult dr = skillEditor.ShowDialog();
 
                 // Get returned item from chunk viewer.
-                frm5.Close();
+                skillEditor.Close();
             }
             catch
             { }
@@ -12653,14 +3089,14 @@ namespace CoreKeeperInventoryEditor
 
         // Toggle force keep the inventory empty.
         readonly System.Timers.Timer playersKeepInventoryEmptyTimer = new System.Timers.Timer();
-        private void TrashInventory_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void TrashInventory_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
-            if (TrashInventory_ToggleSwith.Checked && MessageBox.Show("This mod will delete ALL inventory items and ALL picked up ground items. Are you sure?", "Trash Inventory", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            if (TrashInventory_ToggleSwitch.Checked && MessageBox.Show("This mod will delete ALL inventory items and ALL picked up ground items. Are you sure?", "Trash Inventory", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
             {
                 // Toggle slider.
-                TrashInventory_ToggleSwith.CheckedChanged -= TrashInventory_ToggleSwith_CheckedChanged;
-                TrashInventory_ToggleSwith.Checked = false;
-                TrashInventory_ToggleSwith.CheckedChanged += TrashInventory_ToggleSwith_CheckedChanged;
+                TrashInventory_ToggleSwitch.CheckedChanged -= TrashInventory_ToggleSwitch_CheckedChanged;
+                TrashInventory_ToggleSwitch.Checked = false;
+                TrashInventory_ToggleSwitch.CheckedChanged += TrashInventory_ToggleSwitch_CheckedChanged;
 
                 // User declined, return.
                 return;
@@ -12670,9 +3106,9 @@ namespace CoreKeeperInventoryEditor
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                TrashInventory_ToggleSwith.CheckedChanged -= TrashInventory_ToggleSwith_CheckedChanged;
-                TrashInventory_ToggleSwith.Checked = false;
-                TrashInventory_ToggleSwith.CheckedChanged += TrashInventory_ToggleSwith_CheckedChanged;
+                TrashInventory_ToggleSwitch.CheckedChanged -= TrashInventory_ToggleSwitch_CheckedChanged;
+                TrashInventory_ToggleSwitch.Checked = false;
+                TrashInventory_ToggleSwitch.CheckedChanged += TrashInventory_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -12682,16 +3118,16 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsInventory == null)
             {
                 // Toggle slider.
-                TrashInventory_ToggleSwith.CheckedChanged -= TrashInventory_ToggleSwith_CheckedChanged;
-                TrashInventory_ToggleSwith.Checked = false;
-                TrashInventory_ToggleSwith.CheckedChanged += TrashInventory_ToggleSwith_CheckedChanged;
+                TrashInventory_ToggleSwitch.CheckedChanged -= TrashInventory_ToggleSwitch_CheckedChanged;
+                TrashInventory_ToggleSwitch.Checked = false;
+                TrashInventory_ToggleSwitch.CheckedChanged += TrashInventory_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Inventory addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if the slider was not yet checked.
-            if (TrashInventory_ToggleSwith.Checked)
+            if (TrashInventory_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Name button to indicate loading.
@@ -12760,7 +3196,7 @@ namespace CoreKeeperInventoryEditor
             }
 
             // Reload Inventory.
-            AddItemToInv(type: 0, amount: 1, variation: 0, CycleAll: true);
+            AddItemToInv(Type: 0, Amount: 1, Variation: 0, CycleAll: true);
         }
         #endregion
 
@@ -12769,12 +3205,12 @@ namespace CoreKeeperInventoryEditor
         // Toggle minecart max speed.
         readonly System.Timers.Timer minecartMaxSpeedTimer = new System.Timers.Timer();
         public IEnumerable<long> AoBScanResultsMaxMinecartSpeed = null;
-        private async void MaxMinecartSpeed_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private async void MaxMinecartSpeed_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Mod is currently broken - toggle slider off.
-            MaxMinecartSpeed_ToggleSwith.CheckedChanged -= MaxMinecartSpeed_ToggleSwith_CheckedChanged;
-            MaxMinecartSpeed_ToggleSwith.Checked = false;
-            MaxMinecartSpeed_ToggleSwith.CheckedChanged += MaxMinecartSpeed_ToggleSwith_CheckedChanged;
+            MaxMinecartSpeed_ToggleSwitch.CheckedChanged -= MaxMinecartSpeed_ToggleSwitch_CheckedChanged;
+            MaxMinecartSpeed_ToggleSwitch.Checked = false;
+            MaxMinecartSpeed_ToggleSwitch.CheckedChanged += MaxMinecartSpeed_ToggleSwitch_CheckedChanged;
             return;
 
             #pragma warning disable // Suppress Unreachable code.
@@ -12782,16 +3218,16 @@ namespace CoreKeeperInventoryEditor
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                MaxMinecartSpeed_ToggleSwith.CheckedChanged -= MaxMinecartSpeed_ToggleSwith_CheckedChanged;
-                MaxMinecartSpeed_ToggleSwith.Checked = false;
-                MaxMinecartSpeed_ToggleSwith.CheckedChanged += MaxMinecartSpeed_ToggleSwith_CheckedChanged;
+                MaxMinecartSpeed_ToggleSwitch.CheckedChanged -= MaxMinecartSpeed_ToggleSwitch_CheckedChanged;
+                MaxMinecartSpeed_ToggleSwitch.Checked = false;
+                MaxMinecartSpeed_ToggleSwitch.CheckedChanged += MaxMinecartSpeed_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if the slider was not yet checked.
-            if (MaxMinecartSpeed_ToggleSwith.Checked)
+            if (MaxMinecartSpeed_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Name button to indicate loading.
@@ -12836,9 +3272,9 @@ namespace CoreKeeperInventoryEditor
                     AoBScanResultsMaxMinecartSpeed = null;
 
                     // Toggle slider.
-                    MaxMinecartSpeed_ToggleSwith.CheckedChanged -= MaxMinecartSpeed_ToggleSwith_CheckedChanged;
-                    MaxMinecartSpeed_ToggleSwith.Checked = false;
-                    MaxMinecartSpeed_ToggleSwith.CheckedChanged += MaxMinecartSpeed_ToggleSwith_CheckedChanged;
+                    MaxMinecartSpeed_ToggleSwitch.CheckedChanged -= MaxMinecartSpeed_ToggleSwitch_CheckedChanged;
+                    MaxMinecartSpeed_ToggleSwitch.Checked = false;
+                    MaxMinecartSpeed_ToggleSwitch.CheckedChanged += MaxMinecartSpeed_ToggleSwitch_CheckedChanged;
 
                     // Display error message.
                     MessageBox.Show("There was an issue trying to fetch the minecart addresses." + Environment.NewLine + "Try reloading the game!!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -12920,21 +3356,202 @@ namespace CoreKeeperInventoryEditor
         }
         #endregion
 
+        #region Freeze Slot Stats
+
+        private PictureBox[] _slotPictures;             // Holds references to each SlotN_PictureBox on the Inventory tab.
+        private Dictionary<int, CheckBox> _freezeBoxes; // Maps a slot index to its dynamically created “freeze” CheckBox.
+        private Dictionary<int, int[]> _frozenSlotInfo; // Stores the original [type, amount, variation, skillset] info for each slot the user has frozen.
+        readonly System.Timers.Timer playersFreezeItemSlotsTimer = new System.Timers.Timer();
+        private void FreezeItemSlots_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
+        {
+            // Open the process and check if it was successful before the AoB scan.
+            if (!MemLib.OpenProcess("CoreKeeper"))
+            {
+                // Toggle slider.
+                FreezeItemSlots_ToggleSwitch.CheckedChanged -= FreezeItemSlots_ToggleSwitch_CheckedChanged;
+                FreezeItemSlots_ToggleSwitch.Checked = false;
+                FreezeItemSlots_ToggleSwitch.CheckedChanged += FreezeItemSlots_ToggleSwitch_CheckedChanged;
+
+                MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Ensure the inventory was loaded.
+            if (AoBScanResultsInventory == null)
+            {
+                // Toggle slider.
+                FreezeItemSlots_ToggleSwitch.CheckedChanged -= FreezeItemSlots_ToggleSwitch_CheckedChanged;
+                FreezeItemSlots_ToggleSwitch.Checked = false;
+                FreezeItemSlots_ToggleSwitch.CheckedChanged += FreezeItemSlots_ToggleSwitch_CheckedChanged;
+
+                MessageBox.Show("You need to first scan for the Inventory addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (FreezeItemSlots_ToggleSwitch.Checked)
+            {
+                // Show the checkboxes.
+                BuildSlotArrays();
+                CreateFreezeCheckboxes();
+
+                // Snapshot every checked slot.
+                _frozenSlotInfo = new Dictionary<int, int[]>();
+                foreach (var kv in _freezeBoxes)
+                    if (kv.Value.Checked)
+                        _frozenSlotInfo[kv.Key] = GetSlotInfo(kv.Key);
+
+                // Start the timed events.
+                playersFreezeItemSlotsTimer.Interval = 100; // Custom intervals.
+                playersFreezeItemSlotsTimer.Elapsed += new ElapsedEventHandler(PlayersFreezeItemSlotsTimedEvent);
+                playersFreezeItemSlotsTimer.Start();
+            }
+            else
+            {
+                // Stop freezing.
+                playersFreezeItemSlotsTimer.Stop();
+                _frozenSlotInfo.Clear();
+
+                // Remove the checkboxes. We dont just want them to sit hidden or linger invisibly.
+                foreach (var cb in _freezeBoxes.Values)
+                {
+                    cb.Parent?.Controls.Remove(cb);
+                    cb.Dispose();
+                }
+                _freezeBoxes.Clear();
+            }
+        }
+
+        private void PlayersFreezeItemSlotsTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            // Run on the UI thread for calling UI methods.
+            this.Invoke((MethodInvoker)(() =>
+            {
+                foreach (var kv in _frozenSlotInfo.ToList())
+                {
+                    int slot = kv.Key;
+                    int[] original = kv.Value;
+                    int[] current = GetSlotInfo(slot);
+
+                    // If item type changed, re-snapshot.
+                    if (current[0] != original[0])
+                    {
+                        _frozenSlotInfo[slot] = current;
+                        continue;
+                    }
+
+                    // If amount decreased, write it back.
+                    if (current[1] != original[1])
+                    {
+                        AddItemToInv(
+                            ItemSlot:  slot,
+                            Type:      original[0],
+                            Amount:    original[1],
+                            Variation: original[2],
+                            Skillset:  original[3],
+                            Overwrite: true
+                        );
+                    }
+
+                    #region Disabled: Allow Value Increases
+
+                    /*
+                    // If amount decreased, write it back.
+                    if (current[1] < original[1])
+                    {
+                        AddItemToInv(
+                            ItemSlot:  slot,
+                            Type:      original[0],
+                            Amount:    original[1],
+                            Variation: original[2],
+                            Skillset:  original[3],
+                            Overwrite: true
+                        );
+                    }
+                    else if (current[1] > original[1])
+                    {
+                        // If amount increased, update baseline.
+                        _frozenSlotInfo[slot] = current;
+                    }
+                    */
+                    #endregion
+                }
+            }));
+        }
+
+        #region Checkbox Helpers
+
+        private void BuildSlotArrays()
+        {
+            // Count the total amount of pictureboxes on the inventory tab.
+            int slotCount = Main_TabControl.TabPages["Inventory_TabPage"].Controls.OfType<PictureBox>().Count();
+
+            var tab = Main_TabControl.TabPages["Inventory_TabPage"];
+            _slotPictures = Enumerable.Range(1, slotCount)
+                .Select(i => tab.Controls.Find($"Slot{i}_PictureBox", true)
+                .FirstOrDefault() as PictureBox)
+                .ToArray();
+        }
+
+        private void CreateFreezeCheckboxes()
+        {
+            var tab = Main_TabControl.TabPages["Inventory_TabPage"];
+            _freezeBoxes = new Dictionary<int, CheckBox>();
+
+            for (int i = 1; i <= _slotPictures.Length; i++)
+            {
+                var pic = _slotPictures[i - 1];
+                if (pic == null) continue;
+
+                var cb = new CheckBox
+                {
+                    Name = $"FreezeSlot{i}_CheckBox",
+                    Tag = i,                                      // Store the slot.
+                    Size = new Size(16, 16),
+                    Location = new Point(pic.Width - 18, 2),      // Relative to pic.ClientRectangle.
+                    BackColor = Color.FromArgb(150, Color.Black),
+                    ForeColor = Color.White,
+                    Parent = pic,                                 // Make it a child.
+                    AutoSize = false
+                };
+                cb.CheckedChanged += FreezeSlotCheckBox_CheckedChanged;
+
+                pic.Controls.Add(cb);                             // Add to pic rather than tab.
+                _freezeBoxes[i] = cb;
+            }
+        }
+
+        private void FreezeSlotCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            // If user checks it while the feature is on, immediately capture its current info.
+            if (FreezeItemSlots_ToggleSwitch.Checked)
+            {
+                var cb = (CheckBox)sender;
+                int slot = (int)cb.Tag; // Get it back safely.
+                if (cb.Checked)
+                    _frozenSlotInfo[slot] = GetSlotInfo(slot);
+                else
+                    _frozenSlotInfo.Remove(slot);
+            }
+        }
+        #endregion
+
+        #endregion // End freeze item slots.
+
         // Mods below use the "Player Mod Offsets".
 
         #region Player Position
 
         // Enable player xy tool.
         readonly System.Timers.Timer playersPositionTimer = new System.Timers.Timer();
-        private void DisplayLocation_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void DisplayLocation_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                DisplayLocation_ToggleSwith.CheckedChanged -= DisplayLocation_ToggleSwith_CheckedChanged;
-                DisplayLocation_ToggleSwith.Checked = false;
-                DisplayLocation_ToggleSwith.CheckedChanged += DisplayLocation_ToggleSwith_CheckedChanged;
+                DisplayLocation_ToggleSwitch.CheckedChanged -= DisplayLocation_ToggleSwitch_CheckedChanged;
+                DisplayLocation_ToggleSwitch.Checked = false;
+                DisplayLocation_ToggleSwitch.CheckedChanged += DisplayLocation_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -12944,16 +3561,16 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                DisplayLocation_ToggleSwith.CheckedChanged -= DisplayLocation_ToggleSwith_CheckedChanged;
-                DisplayLocation_ToggleSwith.Checked = false;
-                DisplayLocation_ToggleSwith.CheckedChanged += DisplayLocation_ToggleSwith_CheckedChanged;
+                DisplayLocation_ToggleSwitch.CheckedChanged -= DisplayLocation_ToggleSwitch_CheckedChanged;
+                DisplayLocation_ToggleSwitch.Checked = false;
+                DisplayLocation_ToggleSwitch.CheckedChanged += DisplayLocation_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if the slider was not yet checked.
-            if (DisplayLocation_ToggleSwith.Checked)
+            if (DisplayLocation_ToggleSwitch.Checked)
             {
                 // Start the timed events.
                 playersPositionTimer.Interval = 100; // Custom intervals.
@@ -13030,16 +3647,16 @@ namespace CoreKeeperInventoryEditor
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                DisplayLocation_ToggleSwith.CheckedChanged -= DisplayLocation_ToggleSwith_CheckedChanged;
-                DisplayLocation_ToggleSwith.Checked = false;
-                DisplayLocation_ToggleSwith.CheckedChanged += DisplayLocation_ToggleSwith_CheckedChanged;
+                DisplayLocation_ToggleSwitch.CheckedChanged -= DisplayLocation_ToggleSwitch_CheckedChanged;
+                DisplayLocation_ToggleSwitch.Checked = false;
+                DisplayLocation_ToggleSwitch.CheckedChanged += DisplayLocation_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if the slider was not yet checked.
-            if (DisplayLocation_ToggleSwith.Checked)
+            if (DisplayLocation_ToggleSwitch.Checked)
             {
                 // Ensure pointers are found.
                 if (AoBScanResultsPlayerTools == null)
@@ -13054,11 +3671,11 @@ namespace CoreKeeperInventoryEditor
                 // Spawn item picker window.
                 try
                 {
-                    ChunkViewer frm4 = new ChunkViewer(this);
-                    DialogResult dr = frm4.ShowDialog(this);
+                    ChunkViewer chunkViewer = new ChunkViewer(this);
+                    DialogResult dr = chunkViewer.ShowDialog(this);
 
                     // Get returned item from chunk viewer.
-                    frm4.Close();
+                    chunkViewer.Close();
                 }
                 catch
                 { }
@@ -13076,15 +3693,15 @@ namespace CoreKeeperInventoryEditor
         // Toggle godmode.
         readonly System.Timers.Timer playersGodmodeTimer = new System.Timers.Timer();
         string godmodeAddress = "0";
-        private void Godmode_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void Godmode_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                Godmode_ToggleSwith.CheckedChanged -= Godmode_ToggleSwith_CheckedChanged;
-                Godmode_ToggleSwith.Checked = false;
-                Godmode_ToggleSwith.CheckedChanged += Godmode_ToggleSwith_CheckedChanged;
+                Godmode_ToggleSwitch.CheckedChanged -= Godmode_ToggleSwitch_CheckedChanged;
+                Godmode_ToggleSwitch.Checked = false;
+                Godmode_ToggleSwitch.CheckedChanged += Godmode_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13094,9 +3711,9 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                Godmode_ToggleSwith.CheckedChanged -= Godmode_ToggleSwith_CheckedChanged;
-                Godmode_ToggleSwith.Checked = false;
-                Godmode_ToggleSwith.CheckedChanged += Godmode_ToggleSwith_CheckedChanged;
+                Godmode_ToggleSwitch.CheckedChanged -= Godmode_ToggleSwitch_CheckedChanged;
+                Godmode_ToggleSwitch.Checked = false;
+                Godmode_ToggleSwitch.CheckedChanged += Godmode_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13106,7 +3723,7 @@ namespace CoreKeeperInventoryEditor
             godmodeAddress = BigInteger.Add(BigInteger.Parse(AoBScanResultsPlayerTools.First().ToString("X"), NumberStyles.HexNumber), BigInteger.Parse(godmode_Offset, NumberStyles.Integer)).ToString("X");
 
             // Check if the slider was not yet checked.
-            if (Godmode_ToggleSwith.Checked)
+            if (Godmode_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Start the timed events.
@@ -13134,15 +3751,15 @@ namespace CoreKeeperInventoryEditor
 
         // Change player speed.
         string originalSpeed = "336"; // Original max speed.
-        private void Speed_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void Speed_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                Speed_ToggleSwith.CheckedChanged -= Speed_ToggleSwith_CheckedChanged;
-                Speed_ToggleSwith.Checked = false;
-                Speed_ToggleSwith.CheckedChanged += Speed_ToggleSwith_CheckedChanged;
+                Speed_ToggleSwitch.CheckedChanged -= Speed_ToggleSwitch_CheckedChanged;
+                Speed_ToggleSwitch.Checked = false;
+                Speed_ToggleSwitch.CheckedChanged += Speed_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13152,9 +3769,9 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                Speed_ToggleSwith.CheckedChanged -= Speed_ToggleSwith_CheckedChanged;
-                Speed_ToggleSwith.Checked = false;
-                Speed_ToggleSwith.CheckedChanged += Speed_ToggleSwith_CheckedChanged;
+                Speed_ToggleSwitch.CheckedChanged -= Speed_ToggleSwitch_CheckedChanged;
+                Speed_ToggleSwitch.Checked = false;
+                Speed_ToggleSwitch.CheckedChanged += Speed_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13164,7 +3781,7 @@ namespace CoreKeeperInventoryEditor
             string playerSpeedAddress = BigInteger.Add(BigInteger.Parse(AoBScanResultsPlayerTools.First().ToString("X"), NumberStyles.HexNumber), BigInteger.Parse(speed_Offset, NumberStyles.Integer)).ToString("X");
 
             // Check if the slider was not yet checked.
-            if (Speed_ToggleSwith.Checked)
+            if (Speed_ToggleSwitch.Checked)
             {
                 // Disable numericupdown.
                 SpeedAmount_NumericUpDown.Enabled = false;
@@ -13195,15 +3812,15 @@ namespace CoreKeeperInventoryEditor
         readonly System.Timers.Timer playersNoHungerTimer = new System.Timers.Timer();
         string hungerAddress = "0";
         // public IEnumerable<long> AoBScanResultsNoHunger1Tools = null;
-        private void InfiniteFood_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void InfiniteFood_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                InfiniteFood_ToggleSwith.CheckedChanged -= InfiniteFood_ToggleSwith_CheckedChanged;
-                InfiniteFood_ToggleSwith.Checked = false;
-                InfiniteFood_ToggleSwith.CheckedChanged += InfiniteFood_ToggleSwith_CheckedChanged;
+                InfiniteFood_ToggleSwitch.CheckedChanged -= InfiniteFood_ToggleSwitch_CheckedChanged;
+                InfiniteFood_ToggleSwitch.Checked = false;
+                InfiniteFood_ToggleSwitch.CheckedChanged += InfiniteFood_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13213,9 +3830,9 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                InfiniteFood_ToggleSwith.CheckedChanged -= InfiniteFood_ToggleSwith_CheckedChanged;
-                InfiniteFood_ToggleSwith.Checked = false;
-                InfiniteFood_ToggleSwith.CheckedChanged += InfiniteFood_ToggleSwith_CheckedChanged;
+                InfiniteFood_ToggleSwitch.CheckedChanged -= InfiniteFood_ToggleSwitch_CheckedChanged;
+                InfiniteFood_ToggleSwitch.Checked = false;
+                InfiniteFood_ToggleSwitch.CheckedChanged += InfiniteFood_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13225,7 +3842,7 @@ namespace CoreKeeperInventoryEditor
             hungerAddress = BigInteger.Add(BigInteger.Parse(AoBScanResultsPlayerTools.First().ToString("X"), NumberStyles.HexNumber), BigInteger.Parse(hunger_Offset, NumberStyles.Integer)).ToString("X");
 
             // Check if the slider was not yet checked.
-            if (InfiniteFood_ToggleSwith.Checked)
+            if (InfiniteFood_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Start the timed events.
@@ -13379,15 +3996,15 @@ namespace CoreKeeperInventoryEditor
         // Toggle infinite mana.
         readonly System.Timers.Timer playersInfiniteManaTimer = new System.Timers.Timer();
         string manaAddress = "0";
-        private void InfiniteMana_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void InfiniteMana_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                InfiniteMana_ToggleSwith.CheckedChanged -= InfiniteMana_ToggleSwith_CheckedChanged;
-                InfiniteMana_ToggleSwith.Checked = false;
-                InfiniteMana_ToggleSwith.CheckedChanged += InfiniteMana_ToggleSwith_CheckedChanged;
+                InfiniteMana_ToggleSwitch.CheckedChanged -= InfiniteMana_ToggleSwitch_CheckedChanged;
+                InfiniteMana_ToggleSwitch.Checked = false;
+                InfiniteMana_ToggleSwitch.CheckedChanged += InfiniteMana_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13397,9 +4014,9 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                InfiniteMana_ToggleSwith.CheckedChanged -= InfiniteMana_ToggleSwith_CheckedChanged;
-                InfiniteMana_ToggleSwith.Checked = false;
-                InfiniteMana_ToggleSwith.CheckedChanged += InfiniteMana_ToggleSwith_CheckedChanged;
+                InfiniteMana_ToggleSwitch.CheckedChanged -= InfiniteMana_ToggleSwitch_CheckedChanged;
+                InfiniteMana_ToggleSwitch.Checked = false;
+                InfiniteMana_ToggleSwitch.CheckedChanged += InfiniteMana_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13409,7 +4026,7 @@ namespace CoreKeeperInventoryEditor
             manaAddress = BigInteger.Add(BigInteger.Parse(AoBScanResultsPlayerTools.First().ToString("X"), NumberStyles.HexNumber), BigInteger.Parse(mana_Offset, NumberStyles.Integer)).ToString("X");
 
             // Check if the slider was not yet checked.
-            if (InfiniteMana_ToggleSwith.Checked)
+            if (InfiniteMana_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Start the timed events.
@@ -13439,15 +4056,15 @@ namespace CoreKeeperInventoryEditor
         readonly System.Timers.Timer playersNoclipTimer = new System.Timers.Timer();
         string noclipAddress = "0";
         string noclipOriginalValue = "4";
-        private void Noclip_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void Noclip_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                Noclip_ToggleSwith.CheckedChanged -= Noclip_ToggleSwith_CheckedChanged;
-                Noclip_ToggleSwith.Checked = false;
-                Noclip_ToggleSwith.CheckedChanged += Noclip_ToggleSwith_CheckedChanged;
+                Noclip_ToggleSwitch.CheckedChanged -= Noclip_ToggleSwitch_CheckedChanged;
+                Noclip_ToggleSwitch.Checked = false;
+                Noclip_ToggleSwitch.CheckedChanged += Noclip_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13457,9 +4074,9 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                Noclip_ToggleSwith.CheckedChanged -= Noclip_ToggleSwith_CheckedChanged;
-                Noclip_ToggleSwith.Checked = false;
-                Noclip_ToggleSwith.CheckedChanged += Noclip_ToggleSwith_CheckedChanged;
+                Noclip_ToggleSwitch.CheckedChanged -= Noclip_ToggleSwitch_CheckedChanged;
+                Noclip_ToggleSwitch.Checked = false;
+                Noclip_ToggleSwitch.CheckedChanged += Noclip_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13471,7 +4088,7 @@ namespace CoreKeeperInventoryEditor
             noclipAddress = BigInteger.Add(BigInteger.Parse(AoBScanResultsPlayerTools.First().ToString("X"), NumberStyles.HexNumber), BigInteger.Parse(noclip_Offset, NumberStyles.Integer)).ToString("X");
 
             // Check if the slider was not yet checked.
-            if (Noclip_ToggleSwith.Checked)
+            if (Noclip_ToggleSwitch.Checked)
             {
                 // Slider is being toggled on.
                 // Get original value.
@@ -13515,15 +4132,15 @@ namespace CoreKeeperInventoryEditor
         #region Suicide
 
         // Kill the player via suicide.
-        private void Suicide_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void Suicide_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                Suicide_ToggleSwith.CheckedChanged -= Suicide_ToggleSwith_CheckedChanged;
-                Suicide_ToggleSwith.Checked = false;
-                Suicide_ToggleSwith.CheckedChanged += Suicide_ToggleSwith_CheckedChanged;
+                Suicide_ToggleSwitch.CheckedChanged -= Suicide_ToggleSwitch_CheckedChanged;
+                Suicide_ToggleSwitch.Checked = false;
+                Suicide_ToggleSwitch.CheckedChanged += Suicide_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13533,9 +4150,9 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                Suicide_ToggleSwith.CheckedChanged -= Suicide_ToggleSwith_CheckedChanged;
-                Suicide_ToggleSwith.Checked = false;
-                Suicide_ToggleSwith.CheckedChanged += Suicide_ToggleSwith_CheckedChanged;
+                Suicide_ToggleSwitch.CheckedChanged -= Suicide_ToggleSwitch_CheckedChanged;
+                Suicide_ToggleSwitch.Checked = false;
+                Suicide_ToggleSwitch.CheckedChanged += Suicide_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13548,24 +4165,24 @@ namespace CoreKeeperInventoryEditor
             MemLib.WriteMemory(godmodeAddress, "int", "0"); // Overwrite new value.
 
             // Toggle slider.
-            Suicide_ToggleSwith.CheckedChanged -= Suicide_ToggleSwith_CheckedChanged;
-            Suicide_ToggleSwith.Checked = false;
-            Suicide_ToggleSwith.CheckedChanged += Suicide_ToggleSwith_CheckedChanged;
+            Suicide_ToggleSwitch.CheckedChanged -= Suicide_ToggleSwitch_CheckedChanged;
+            Suicide_ToggleSwitch.Checked = false;
+            Suicide_ToggleSwitch.CheckedChanged += Suicide_ToggleSwitch_CheckedChanged;
         }
         #endregion
 
         #region Force Recall
 
         // Kill the player via suicide.
-        private async void ForceRecall_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private async void ForceRecall_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                ForceRecall_ToggleSwith.CheckedChanged -= ForceRecall_ToggleSwith_CheckedChanged;
-                ForceRecall_ToggleSwith.Checked = false;
-                ForceRecall_ToggleSwith.CheckedChanged += ForceRecall_ToggleSwith_CheckedChanged;
+                ForceRecall_ToggleSwitch.CheckedChanged -= ForceRecall_ToggleSwitch_CheckedChanged;
+                ForceRecall_ToggleSwitch.Checked = false;
+                ForceRecall_ToggleSwitch.CheckedChanged += ForceRecall_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13575,9 +4192,9 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                ForceRecall_ToggleSwith.CheckedChanged -= ForceRecall_ToggleSwith_CheckedChanged;
-                ForceRecall_ToggleSwith.Checked = false;
-                ForceRecall_ToggleSwith.CheckedChanged += ForceRecall_ToggleSwith_CheckedChanged;
+                ForceRecall_ToggleSwitch.CheckedChanged -= ForceRecall_ToggleSwitch_CheckedChanged;
+                ForceRecall_ToggleSwitch.Checked = false;
+                ForceRecall_ToggleSwitch.CheckedChanged += ForceRecall_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13587,7 +4204,7 @@ namespace CoreKeeperInventoryEditor
             string playerStateAddress = BigInteger.Add(BigInteger.Parse(AoBScanResultsPlayerTools.First().ToString("X"), NumberStyles.HexNumber), BigInteger.Parse(noclip_Offset, NumberStyles.Integer)).ToString("X");
 
             // Disable slider.
-            ForceRecall_ToggleSwith.Enabled = false;
+            ForceRecall_ToggleSwitch.Enabled = false;
 
             // Enable recall sequence value.
             MemLib.WriteMemory(playerStateAddress, "int", "524288");
@@ -13599,12 +4216,12 @@ namespace CoreKeeperInventoryEditor
             MemLib.WriteMemory(playerStateAddress, "int", "4");
 
             // Enable slider.
-            ForceRecall_ToggleSwith.Enabled = true;
+            ForceRecall_ToggleSwitch.Enabled = true;
 
             // Toggle slider.
-            ForceRecall_ToggleSwith.CheckedChanged -= ForceRecall_ToggleSwith_CheckedChanged;
-            ForceRecall_ToggleSwith.Checked = false;
-            ForceRecall_ToggleSwith.CheckedChanged += ForceRecall_ToggleSwith_CheckedChanged;
+            ForceRecall_ToggleSwitch.CheckedChanged -= ForceRecall_ToggleSwitch_CheckedChanged;
+            ForceRecall_ToggleSwitch.Checked = false;
+            ForceRecall_ToggleSwitch.CheckedChanged += ForceRecall_ToggleSwitch_CheckedChanged;
         }
         #endregion // End goto spawn.
 
@@ -13612,15 +4229,15 @@ namespace CoreKeeperInventoryEditor
 
         // Passive AI.
         // public IEnumerable<long> AoBScanResultsPassiveAITools = null;
-        private void PassiveAI_ToggleSwith_CheckedChanged(object sender, EventArgs e)
+        private void PassiveAI_ToggleSwitch_CheckedChanged(object sender, EventArgs e)
         {
             // Open the process and check if it was successful before the AoB scan.
             if (!MemLib.OpenProcess("CoreKeeper"))
             {
                 // Toggle slider.
-                PassiveAI_ToggleSwith.CheckedChanged -= PassiveAI_ToggleSwith_CheckedChanged;
-                PassiveAI_ToggleSwith.Checked = false;
-                PassiveAI_ToggleSwith.CheckedChanged += PassiveAI_ToggleSwith_CheckedChanged;
+                PassiveAI_ToggleSwitch.CheckedChanged -= PassiveAI_ToggleSwitch_CheckedChanged;
+                PassiveAI_ToggleSwitch.Checked = false;
+                PassiveAI_ToggleSwitch.CheckedChanged += PassiveAI_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("Process Is Not Found or Open!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13630,9 +4247,9 @@ namespace CoreKeeperInventoryEditor
             if (AoBScanResultsPlayerTools == null)
             {
                 // Toggle slider.
-                PassiveAI_ToggleSwith.CheckedChanged -= PassiveAI_ToggleSwith_CheckedChanged;
-                PassiveAI_ToggleSwith.Checked = false;
-                PassiveAI_ToggleSwith.CheckedChanged += PassiveAI_ToggleSwith_CheckedChanged;
+                PassiveAI_ToggleSwitch.CheckedChanged -= PassiveAI_ToggleSwitch_CheckedChanged;
+                PassiveAI_ToggleSwitch.Checked = false;
+                PassiveAI_ToggleSwitch.CheckedChanged += PassiveAI_ToggleSwitch_CheckedChanged;
 
                 MessageBox.Show("You need to first scan for the Player addresses!", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -13642,7 +4259,7 @@ namespace CoreKeeperInventoryEditor
             string passiveAIAddress = BigInteger.Add(BigInteger.Parse(AoBScanResultsPlayerTools.First().ToString("X"), NumberStyles.HexNumber), BigInteger.Parse(passiveAI_Offset, NumberStyles.Integer)).ToString("X");
 
             // Toggle on passive AI.
-            if (PassiveAI_ToggleSwith.Checked)
+            if (PassiveAI_ToggleSwitch.Checked)
             {
                 // On.
                 // Write value.
@@ -13918,11 +4535,11 @@ namespace CoreKeeperInventoryEditor
             TeleportPlayerHelp_Button.Enabled = true;
 
             // Spawn teleport address guide window.
-            TeleportAddressGuide frm6 = new TeleportAddressGuide();
-            DialogResult dr = frm6.ShowDialog(this);
+            TeleportAddressGuide teleportAddressGuide = new TeleportAddressGuide();
+            DialogResult dr = teleportAddressGuide.ShowDialog(this);
 
             // Close returning form.
-            frm6.Close();
+            teleportAddressGuide.Close();
         }
 
         // Toggle brute force teleport player addresses.
@@ -14182,7 +4799,7 @@ namespace CoreKeeperInventoryEditor
             else if (AoBScanResultsPlayerLocation.Count() > 1 && AoBScanResultsPlayerLocation.Count() < 10) // Check if or between 1 & 9.
             {
                 // Display error message.
-                MessageBox.Show("WARNING! There is more than a single address found! While this mod may still work, long term use may cause crashes.\r\rIt's recommended to reload the world or restart the game and scan again.", errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"WARNING! There is more than a single address found! ({AoBScanResultsPlayerLocation.Count()})\nWhile this mod may still work, long term use may cause crashes.\r\rIt's recommended to reload the world or restart the game and scan again.", warningTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 // return; No return is needed.
             }
@@ -16086,13 +6703,20 @@ namespace CoreKeeperInventoryEditor
             GetWorldInformation_Button.Text = "Loading...";
             WorldInformation_GroupBox.Enabled = false;
 
+            // Reset world properties.
+            // This is so each property rescans on each new world.
+            AoBScanResultsWorldData = null;
+            AoBScanResultsWorldSeedIconMode = null;
+            AoBScanResultsWorldCreationDate = null;
+            AoBScanResultsWorldActivatedCrystals = null;
+
             // Clear the datagridview.
             WorldInformation_DataGridView.DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
             WorldInformation_DataGridView.DataSource = null;
             WorldInformation_DataGridView.Rows.Clear();
             WorldInformation_DataGridView.Refresh();
 
-            // Get current player name.
+            // Get current world name.
             string world = (worldName != "") ? worldName : WorldInformation_TextBox.Text; // Check if world name override is active.
             string searchString = "{\"name\":\"" + world + "\"";
             StringBuilder builder = new StringBuilder();
@@ -16117,7 +6741,7 @@ namespace CoreKeeperInventoryEditor
                 // Re-enable button.
                 WorldInformation_GroupBox.Enabled = true;
 
-                // Reset aob scan results
+                // Reset aob scan results.
                 AoBScanResultsWorldData = null;
                 AoBScanResultsWorldSeedIconMode = null;
                 AoBScanResultsWorldCreationDate = null;
@@ -16174,7 +6798,7 @@ namespace CoreKeeperInventoryEditor
 
                         // Extract the data from the string.
                         string guid = Regex.Match(getJsonData, "\\\"guid\":\"(?<Data>[^\"]*)\\\"").Groups["Data"].Value;
-                        string seedString = Regex.Match(getJsonData, "\\\"seedString\":\"(?<Data>[^\"]*)\\\"").Groups["Data"].Value;                         // New 1.0+.
+                        string seedString = Regex.Match(getJsonData, "\\\"seedString\":\"(?<Data>[^\"]*)\\\"").Groups["Data"].Value;                                    // New 1.0+.
                         string seed = Regex.Match(getJsonData, "\\\"seed\":(?<Data>\\d+)").Groups["Data"].Value;
                         string activatedCrystals = Regex.Match(getJsonData, "\\\"activatedCrystals\":\\[(?<Data>[0-9, ]*)\\]").Groups["Data"].Value.Trim();
                         string year = Regex.Match(getJsonData, "\\\"year\":(?<Data>\\d+)").Groups["Data"].Value;
@@ -16182,11 +6806,13 @@ namespace CoreKeeperInventoryEditor
                         string day = Regex.Match(getJsonData, "\\\"day\":(?<Data>\\d+)").Groups["Data"].Value;
                         string iconIndex = Regex.Match(getJsonData, "\\\"iconIndex\":(?<Data>\\d+)").Groups["Data"].Value;
                         string mode = Regex.Match(getJsonData, "\\\"mode\":(?<Data>\\d+)").Groups["Data"].Value;
-                        string bossesKilled = Regex.Match(getJsonData, "\\\"bossesKilled\":(?<Data>\\d+)").Groups["Data"].Value;                             // New 1.0+.
-                        string worldGenerationType = Regex.Match(getJsonData, "\\\"worldGenerationType\":(?<Data>\\d+)").Groups["Data"].Value;               // New 1.0+.
+                        string bossesKilled = Regex.Match(getJsonData, "\\\"bossesKilled\":(?<Data>\\d+)").Groups["Data"].Value;                                        // New 1.0+.
+                        string worldGenerationType = Regex.Match(getJsonData, "\\\"worldGenerationType\":(?<Data>\\d+)").Groups["Data"].Value;                          // New 1.0+.
+                        string nextNewContentBundle = Regex.Match(getJsonData, "\\\"nextNewContentBundle\":(?<Data>\\d+)").Groups["Data"].Value;                        // New 1.1+.
+                        string activatedContentBundles = Regex.Match(getJsonData, "\\\"activatedContentBundles\":\\[(?<Data>[0-9, ]*)\\]").Groups["Data"].Value.Trim(); // New 1.1+.
 
                         // Extract world generation settings as JSON array of objects
-                        MatchCollection worldGenMatches = Regex.Matches(getJsonData, "\\{\"type\":(?<Type>\\d+),\"level\":(?<Level>\\d+)\\}");               // New 1.0+.
+                        MatchCollection worldGenMatches = Regex.Matches(getJsonData, "\\{\"type\":(?<Type>\\d+),\"level\":(?<Level>\\d+)\\}");                          // New 1.0+.
                         string worldGenerationSettings = "";
                         foreach (Match match in worldGenMatches)
                         {
@@ -16227,17 +6853,8 @@ namespace CoreKeeperInventoryEditor
                         WorldInformation_DataGridView.Invoke((MethodInvoker)(() => WorldInformation_DataGridView.Rows.Add("bossesKilled:", string.IsNullOrEmpty(bossesKilled) ? "N/A" : bossesKilled)));
                         WorldInformation_DataGridView.Invoke((MethodInvoker)(() => WorldInformation_DataGridView.Rows.Add("generationType:", string.IsNullOrEmpty(worldGenerationType) ? "N/A" : worldGenerationType)));
                         WorldInformation_DataGridView.Invoke((MethodInvoker)(() => WorldInformation_DataGridView.Rows.Add("generationSettings:", string.IsNullOrEmpty(worldGenerationSettings) ? "Default" : worldGenerationSettings)));
-
-                        // Define offsets of data.
-                        // nameOffset = getJsonData.IndexOf("\"name\"") + "\"name\"".Length + 2;
-                        // guidOffset = getJsonData.IndexOf("\"guid\"") + "\"guid\"".Length + 2;
-                        // seedOffset = getJsonData.IndexOf("\"seed\"") + "\"seed\"".Length + 1;
-                        // crystalsOffset = getJsonData.IndexOf("\"activatedCrystals\"") + "\"activatedCrystals\"".Length + 2;
-                        // yearOffset = getJsonData.IndexOf("\"year\"") + "\"year\"".Length + 1;
-                        // monthOffset = getJsonData.IndexOf("\"month\"") + "\"month\"".Length + 1;
-                        // dayOffset = getJsonData.IndexOf("\"day\"") + "\"day\"".Length + 1;
-                        // iconindexOffset = getJsonData.IndexOf("\"iconIndex\"") + "\"iconIndex\"".Length + 1;
-                        // modeOffset = getJsonData.IndexOf("\"mode\"") + "\"mode\"".Length + 1;
+                        WorldInformation_DataGridView.Invoke((MethodInvoker)(() => WorldInformation_DataGridView.Rows.Add("nextNewContentBundle:", string.IsNullOrEmpty(nextNewContentBundle) ? "N/A" : nextNewContentBundle)));
+                        WorldInformation_DataGridView.Invoke((MethodInvoker)(() => WorldInformation_DataGridView.Rows.Add("activatedContentBundles:", string.IsNullOrEmpty(activatedContentBundles) ? "N/A" : activatedContentBundles)));
 
                         #region Adjust Controls
 
@@ -16246,7 +6863,7 @@ namespace CoreKeeperInventoryEditor
 
                         // Set seed.
                         // numericUpDown22.Value = (string.IsNullOrEmpty(seed) ? (string.IsNullOrEmpty(seedString) ? 0 : int.Parse(seedString)) : (seed == "0") ? (string.IsNullOrEmpty(seedString) ? 0 : int.Parse(seedString)) : int.Parse(seed));
-                        Seed_NumericUpDown.Value = int.Parse(seed);
+                        Seed_NumericUpDown.Value = uint.Parse(seed);
 
                         // Set icon.
                         Icon_NumericUpDown.Value = int.Parse(iconIndex);
@@ -16526,7 +7143,7 @@ namespace CoreKeeperInventoryEditor
         }
 
         // Change world seed.
-        public async void ChangeWorldSeed(int seed = -1)
+        public async void ChangeWorldSeed(uint seed = 0)
         {
             // Ensure the datagridview is populated.
             if (WorldInformation_DataGridView == null || WorldInformation_DataGridView.Rows.Count == 0)
@@ -16590,8 +7207,7 @@ namespace CoreKeeperInventoryEditor
             string result = string.Join(" ", BitConverter.GetBytes(worldSeed).Select(b => b.ToString("X2"))) + " " + string.Join(" ", BitConverter.GetBytes(worldIcon).Select(b => b.ToString("X2"))) + " " + string.Join(" ", BitConverter.GetBytes(worldMode).Select(b => b.ToString("X2")));
 
             // Scan for the addresses. // Only re-scan address if address is null.
-            if (AoBScanResultsWorldSeedIconMode == null)
-                AoBScanResultsWorldSeedIconMode = await MemLib.AoBScan(result, true, true);
+            AoBScanResultsWorldSeedIconMode ??= await MemLib.AoBScan(result, true, true);
 
             // If the count is zero, the scan had an error.
             if (AoBScanResultsWorldSeedIconMode.Count() < 1) // No results found.
@@ -16643,18 +7259,32 @@ namespace CoreKeeperInventoryEditor
 
                 // Get the new seed.
                 string seedValue = Seed_NumericUpDown.Value.ToString();
-                seedValue = (seed == -1) ? seedValue : seed.ToString(); // Check if seed override was selected.
+                seedValue = (seed == 0) ? seedValue : seed.ToString(); // Check if seed override was selected.
 
                 // Set the new mode value. // Convert ASCII text to hex.
 
-                MemLib.WriteMemory(seedAddress, "int", seedValue);
+                // Memory.dll does not have a direct "uint" type. So lets use "bytes".
+                // MemLib.WriteMemory(seedAddress, "int", seedValue);
+
+                #region Write UInt Value
+
+                // Convert the uint into bytes (little-endian):
+                byte[] bytes = BitConverter.GetBytes(uint.Parse(seedValue));
+
+                // Convert byte array to hex-string representation:
+                string byteString = BitConverter.ToString(bytes).Replace("-", " ");
+
+                // Write the bytes to memory.
+                MemLib.WriteMemory(seedAddress, "bytes", byteString);
+
+                #endregion
 
                 // Perform progress step.
                 WorldInformation_ProgressBar.PerformStep();
             }
 
             // Update datagridview.
-            WorldInformation_DataGridView.Rows[seedRowIndex].Cells[1].Value = (seed == -1) ? Seed_NumericUpDown.Value.ToString() : seed.ToString();
+            WorldInformation_DataGridView.Rows[seedRowIndex].Cells[1].Value = (seed == 0) ? Seed_NumericUpDown.Value.ToString() : seed.ToString();
 
             // Update the progress bar.
             WorldInformation_ProgressBar.Value = 100;
@@ -17899,7 +8529,7 @@ namespace CoreKeeperInventoryEditor
                                                 // Check if to overwrite or to add to empty slots.
                                                 if (OverwriteSlotOne_RadioButton.Checked) // Overwrite slot1.
                                                 {
-                                                    AddItemToInv(itemSlot: 1, type: int.Parse(filenameData[1]), amount: int.Parse(itemAmount), variation: int.Parse(itemVariation) == 0 ? 0 : (int.Parse(itemVariation)), Overwrite: true);
+                                                    AddItemToInv(ItemSlot: 1, Type: int.Parse(filenameData[1]), Amount: int.Parse(itemAmount), Variation: int.Parse(itemVariation) == 0 ? 0 : (int.Parse(itemVariation)), Overwrite: true);
                                                 }
                                                 else if (AddToEmptySlots_RadioButton.Checked) // Add item to an empty slot.
                                                 {
@@ -17909,12 +8539,12 @@ namespace CoreKeeperInventoryEditor
                                                         // Mark item as first.
                                                         firstItem = false;
 
-                                                        AddItemToInv(AddToEmpty: true, type: int.Parse(filenameData[1]), amount: int.Parse(itemAmount), variation: int.Parse(itemVariation) == 0 ? 0 : (int.Parse(itemVariation)), Overwrite: true);
+                                                        AddItemToInv(AddToEmpty: true, Type: int.Parse(filenameData[1]), Amount: int.Parse(itemAmount), Variation: int.Parse(itemVariation) == 0 ? 0 : (int.Parse(itemVariation)), Overwrite: true);
                                                     }
                                                 }
                                                 else if (Custom_RadioButton.Checked) // Custom slot.
                                                 {
-                                                    AddItemToInv(itemSlot: (int)CustomAmount_NumericUpDown.Value, type: int.Parse(filenameData[1]), amount: int.Parse(itemAmount), variation: int.Parse(itemVariation) == 0 ? 0 : (int.Parse(itemVariation)), Overwrite: true);
+                                                    AddItemToInv(ItemSlot: (int)CustomAmount_NumericUpDown.Value, Type: int.Parse(filenameData[1]), Amount: int.Parse(itemAmount), Variation: int.Parse(itemVariation) == 0 ? 0 : (int.Parse(itemVariation)), Overwrite: true);
                                                 }
                                             }
                                         }
@@ -17949,7 +8579,7 @@ namespace CoreKeeperInventoryEditor
                                                 // Check if to overwrite or to add to empty slots.
                                                 if (OverwriteSlotOne_RadioButton.Checked) // Overwrite slot1.
                                                 {
-                                                    AddItemToInv(itemSlot: 1, type: int.Parse(filenameData[1]), amount: int.Parse(itemAmount), Overwrite: true);
+                                                    AddItemToInv(ItemSlot: 1, Type: int.Parse(filenameData[1]), Amount: int.Parse(itemAmount), Overwrite: true);
                                                 }
                                                 else if (AddToEmptySlots_RadioButton.Checked) // Add item to an empty slot.
                                                 {
@@ -17959,12 +8589,12 @@ namespace CoreKeeperInventoryEditor
                                                         // Mark item as first.
                                                         firstItem = false;
 
-                                                        AddItemToInv(AddToEmpty: true, type: int.Parse(filenameData[1]), amount: int.Parse(itemAmount), Overwrite: true);
+                                                        AddItemToInv(AddToEmpty: true, Type: int.Parse(filenameData[1]), Amount: int.Parse(itemAmount), Overwrite: true);
                                                     }
                                                 }
                                                 else if (Custom_RadioButton.Checked) // Custom slot.
                                                 {
-                                                    AddItemToInv(itemSlot: (int)CustomAmount_NumericUpDown.Value, type: int.Parse(filenameData[1]), amount: int.Parse(itemAmount), Overwrite: true);
+                                                    AddItemToInv(ItemSlot: (int)CustomAmount_NumericUpDown.Value, Type: int.Parse(filenameData[1]), Amount: int.Parse(itemAmount), Overwrite: true);
                                                 }
                                             }
                                         }
@@ -18031,9 +8661,9 @@ namespace CoreKeeperInventoryEditor
                             if (godmodeEnabled)
                             {
                                 // Toggle slider.
-                                Godmode_ToggleSwith.CheckedChanged -= Godmode_ToggleSwith_CheckedChanged;
-                                Godmode_ToggleSwith.Checked = true;
-                                Godmode_ToggleSwith.CheckedChanged += Godmode_ToggleSwith_CheckedChanged;
+                                Godmode_ToggleSwitch.CheckedChanged -= Godmode_ToggleSwitch_CheckedChanged;
+                                Godmode_ToggleSwitch.Checked = true;
+                                Godmode_ToggleSwitch.CheckedChanged += Godmode_ToggleSwitch_CheckedChanged;
 
                                 // Slider is being toggled on.
                                 // Start the timed events.
@@ -18051,9 +8681,9 @@ namespace CoreKeeperInventoryEditor
                             else
                             {
                                 // Toggle slider.
-                                Godmode_ToggleSwith.CheckedChanged -= Godmode_ToggleSwith_CheckedChanged;
-                                Godmode_ToggleSwith.Checked = false;
-                                Godmode_ToggleSwith.CheckedChanged += Godmode_ToggleSwith_CheckedChanged;
+                                Godmode_ToggleSwitch.CheckedChanged -= Godmode_ToggleSwitch_CheckedChanged;
+                                Godmode_ToggleSwitch.Checked = false;
+                                Godmode_ToggleSwitch.CheckedChanged += Godmode_ToggleSwitch_CheckedChanged;
 
                                 // Slider is being toggled off.
                                 // Stop the timers.
@@ -18125,9 +8755,9 @@ namespace CoreKeeperInventoryEditor
                             if (noclipEnabled)
                             {
                                 // Toggle slider.
-                                Noclip_ToggleSwith.CheckedChanged -= Noclip_ToggleSwith_CheckedChanged;
-                                Noclip_ToggleSwith.Checked = true;
-                                Noclip_ToggleSwith.CheckedChanged += Noclip_ToggleSwith_CheckedChanged;
+                                Noclip_ToggleSwitch.CheckedChanged -= Noclip_ToggleSwitch_CheckedChanged;
+                                Noclip_ToggleSwitch.Checked = true;
+                                Noclip_ToggleSwitch.CheckedChanged += Noclip_ToggleSwitch_CheckedChanged;
 
                                 // Toggle force on checkbox.
                                 ForceNoclip_Checkbox.Checked = true;
@@ -18151,9 +8781,9 @@ namespace CoreKeeperInventoryEditor
                             else
                             {
                                 // Toggle slider.
-                                Noclip_ToggleSwith.CheckedChanged -= Noclip_ToggleSwith_CheckedChanged;
-                                Noclip_ToggleSwith.Checked = false;
-                                Noclip_ToggleSwith.CheckedChanged += Noclip_ToggleSwith_CheckedChanged;
+                                Noclip_ToggleSwitch.CheckedChanged -= Noclip_ToggleSwitch_CheckedChanged;
+                                Noclip_ToggleSwitch.Checked = false;
+                                Noclip_ToggleSwitch.CheckedChanged += Noclip_ToggleSwitch_CheckedChanged;
 
                                 // Toggle force on checkbox.
                                 ForceNoclip_Checkbox.Checked = false;
@@ -18839,27 +9469,27 @@ namespace CoreKeeperInventoryEditor
             // Get keydown events.
             if (IsKeyPressed(0x25))  // Get left arrow press; subtract id.
             {
-                AddItemToInv(itemSlot: 2, type: currentSwapItem -= 1, amount: currentSwapAmount, variation: currentSwapVariation, Overwrite: true);
+                AddItemToInv(ItemSlot: 2, Type: currentSwapItem -= 1, Amount: currentSwapAmount, Variation: currentSwapVariation, Overwrite: true);
             }
             else if (IsKeyPressed(0x27)) // Get right arrow press; add id.
             {
-                AddItemToInv(itemSlot: 2, type: currentSwapItem += 1, amount: currentSwapAmount, variation: currentSwapVariation, Overwrite: true);
+                AddItemToInv(ItemSlot: 2, Type: currentSwapItem += 1, Amount: currentSwapAmount, Variation: currentSwapVariation, Overwrite: true);
             }
             else if (IsKeyPressed(0x26)) // Get up arrow press; subtract variant.
             {
-                AddItemToInv(itemSlot: 2, type: currentSwapItem, amount: currentSwapAmount, variation: currentSwapVariation -= 1, Overwrite: true);
+                AddItemToInv(ItemSlot: 2, Type: currentSwapItem, Amount: currentSwapAmount, Variation: currentSwapVariation -= 1, Overwrite: true);
             }
             else if (IsKeyPressed(0x28)) // Get down arrow press; add variant.
             {
-                AddItemToInv(itemSlot: 2, type: currentSwapItem, amount: currentSwapAmount, variation: currentSwapVariation += 1, Overwrite: true);
+                AddItemToInv(ItemSlot: 2, Type: currentSwapItem, Amount: currentSwapAmount, Variation: currentSwapVariation += 1, Overwrite: true);
             }
             else if (IsKeyPressed(0xBB)) // Get plus button; add amount.
             {
-                AddItemToInv(itemSlot: 2, type: currentSwapItem, amount: currentSwapAmount += 1, variation: currentSwapVariation, Overwrite: true);
+                AddItemToInv(ItemSlot: 2, Type: currentSwapItem, Amount: currentSwapAmount += 1, Variation: currentSwapVariation, Overwrite: true);
             }
             else if (IsKeyPressed(0xBD)) // Get minus button; subtract amount.
             {
-                AddItemToInv(itemSlot: 2, type: currentSwapItem, amount: currentSwapAmount -= 1, variation: currentSwapVariation, Overwrite: true);
+                AddItemToInv(ItemSlot: 2, Type: currentSwapItem, Amount: currentSwapAmount -= 1, Variation: currentSwapVariation, Overwrite: true);
             }
         }
         #endregion // End quick edit slot2.
