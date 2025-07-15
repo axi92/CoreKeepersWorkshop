@@ -8,12 +8,16 @@ Changes Since v1.3.6.5
 - Reduced the "ItemSelectionMenu" code lines by ~half.
 - Fixed multiple control name typos.
 - Fixed "ItemSelectionMenu" to display items full names.
+- Optimized and fixed the chat commands.
+- Fixed null collection errors for map reveal & teleport.
 
 + Added a map teleport mod.
 + Added two new properties to the world information tool.
 + Added freeze item slots to the player mods.
 + Significantly increased item selection menu load times.
 + Added optional ability to use skillsets in item names.
++ Added a form opacity option to the dev-tools.
++ Added various missing tooltips.
 
 Changes Since v1.3.6.4
 ===========================================================
